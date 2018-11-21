@@ -126,6 +126,7 @@ export default Component.extend({
         let width = this.get('remotevideowidth');
         let height = this.get('remotevideoheight');
         let realratio = parseFloat(width/height);
+        let basicratio = parseFloat(640/480);
 
         let containerwidth = parseFloat($(window).width() - 70);
         let containerheight = parseFloat($(window).height() - 80 - 50);
@@ -144,19 +145,21 @@ export default Component.extend({
         }
         else if(totalviewercount===3 || totalviewercount===4){
             let tempviewercontainerwidth = parseFloat(containerwidth/totalviewercount);
-            let tempviewercontainerheight = parseFloat(tempviewercontainerwidth /  realratio);
+            let tempviewercontainerheight = parseFloat(tempviewercontainerwidth /  basicratio);
 
             if(parseFloat(tempviewercontainerheight*2) > containerheight){
+                // only using 1 line for display video box
                 containerwidth = parseFloat(containerwidth/totalviewercount);
             }
             else{
+                // using 2 line for display video box
                 containerwidth = parseFloat(containerwidth/2 - 10);
                 containerheight = parseFloat(containerheight/2 - 10);
             }
         }
         else if(totalviewercount===5 || totalviewercount===6 ){
             let tempviewercontainerwidth = parseFloat(containerwidth/totalviewercount);
-            let tempviewercontainerheight = parseFloat(tempviewercontainerwidth /  realratio);
+            let tempviewercontainerheight = parseFloat(tempviewercontainerwidth /  basicratio);
 
             if(parseFloat(tempviewercontainerheight*2) > containerheight){
                 containerwidth = parseFloat(containerwidth/totalviewercount);
@@ -186,8 +189,8 @@ export default Component.extend({
             }
         }
 
-         $('div[id=\"' + this.get('viewerinfo.userid')+ '\"]').width(videoviewerwidth);
-         $('div[id=\"' + this.get('viewerinfo.userid')+ '\"]').height(videoviewerheight);
+        $('div[id=\"' + this.get('viewerinfo.userid')+ '\"]').width(videoviewerwidth);
+        $('div[id=\"' + this.get('viewerinfo.userid')+ '\"]').height(videoviewerheight);
     },
 
 
