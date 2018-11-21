@@ -49,8 +49,8 @@
 
 <div class="comment">
     {{#if notesinfo.noteMsg}}
-        <div class="cmc">{{notesinfo.noteMsg}}</div>
-        <textarea class="autosize">{{notesinfo.noteMsg}}</textarea>
+        <div class="cmc">{{{noteDatadiv}}}</div>
+        <textarea class="autosize" rows='5'>{{{noteDatatextrea}}}</textarea>
     {{else}}
         <div class="cmc">Blank note</div>
         <textarea class="autosize">Blank note</textarea>

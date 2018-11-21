@@ -10,6 +10,7 @@ export default Component.extend({
     classNames: ['comunicate'],
 
     scrollbottomposition: true,
+    notescrollbottomposition: true,
     notescrollposition: 'bottom',
     shiftenter: false,
     chatKeyUpActivated: false,
@@ -36,9 +37,11 @@ export default Component.extend({
         // if($("#chatCon")[0].scrollTop === scrollbottomposition){
         if(e.target.scrollTop === scrollbottomposition){
             this.set('scrollbottomposition', true);
+            this.set('notescrollbottomposition', true);
         }
         else{
             this.set('scrollbottomposition', false);
+            this.set('notescrollbottomposition', false);
         }
     },
 
@@ -237,7 +240,22 @@ export default Component.extend({
                 event.preventDefault();
             }
         } else if(event.target.id==='noteMsgType'){
-            if(event.keyCode===13){
+
+          if(event.keyCode===8 || event.keyCode===46){
+            document.getElementById('noteMsgType').style.height = '';
+          }
+
+          else if((event.keyCode===13&&event.shiftKey)||(event.keyCode===13&&event.altKey)){
+              if(event.keyCode===13&&event.shiftKey){
+                  event.preventDefault();
+              }
+              let value = $('#noteMsgType').val();
+              value = value+"\r\n";
+              $('#noteMsgType').val(value).trigger('input');
+              $('#noteMsgType').scrollTop($("#noteMsgType")[0].scrollHeight);
+          }
+
+          else if(event.keyCode===13){
                 this.send('sendNote');
                 event.preventDefault();
             }
@@ -295,6 +313,43 @@ export default Component.extend({
                 }
                 if($(".chatCon").hasClass('line3')){
                     $(".chatCon").removeClass('line3')
+                }
+            }
+        },
+
+        noteinputdata(){
+            this.set('textareascrollheight', $("#noteMsgType")[0].scrollHeight);
+            $("#noteMsgType").height($("#noteMsgType")[0].scrollHeight-20);
+
+            let linecount = $("#noteMsgType").height()/16;
+            if(linecount===2){
+                if($(".notes").hasClass('line3')){
+                    $(".notes").removeClass('line3');
+                }
+                if(!$(".notes").hasClass('line2')){
+                    $(".notes").addClass('line2')
+                }
+                if(this.get('notescrollbottomposition')){
+                    $("#note-msg-area-div")[0].scrollTop = $("#note-msg-area-div")[0].scrollHeight - $("#note-msg-area-div")[0].clientHeight;
+                }
+            }
+            else if(linecount===3){
+                if($(".notes").hasClass('line2')){
+                    $(".notes").removeClass('line2');
+                }
+                if(!$(".notes").hasClass('line3')){
+                    $(".notes").addClass('line3')
+                }
+                if(this.get('notescrollbottomposition')){
+                    $("#note-msg-area-div")[0].scrollTop = $("#note-msg-area-div")[0].scrollHeight - $("#note-msg-area-div")[0].clientHeight;
+                }
+            }
+            else if(linecount <= 1){
+                if($(".notes").hasClass('line2')){
+                    $(".notes").removeClass('line2');
+                }
+                if($(".notes").hasClass('line3')){
+                    $(".notes").removeClass('line3')
                 }
             }
         },
@@ -387,8 +442,8 @@ export default Component.extend({
             //
             // let scrollTop = $('.comunicate ul').scrollTop();
             // let scrollTop1 = $('.comunicate .notes > ul').scrollTop();
-            // let chatHeight =$('.chat ul')[0].scrollHeight; // 스크롤을 포함한 전체 길이
-            // let chatHeight1 =$('.chat ul').outerHeight(); // 스크롤시 최하단 높이
+            // let chatHeight =$('.chat ul')[0].scrollHeight; // ?�크롤을 ?�함???�체 길이
+            // let chatHeight1 =$('.chat ul').outerHeight(); // ?�크롤시 최하???�이
             //
             // if(chatHeight > chatHeight1){
             //     $('.chat .scroll').css('opacity' , '1').show();

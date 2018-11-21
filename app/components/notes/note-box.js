@@ -8,6 +8,9 @@ export default Component.extend({
     tagName: 'div',
     classNames: ['nl'],
 
+    noteDatatextrea: null,
+    noteDatadiv: null,
+
     // notesinfo: computed('notesinfo', 'notesinfo.{[],@notesinfo}', function(){
     //     let n = this.get('notesinfo')
     //     GLOBAL.error('noteType1:' + JSON.stringify(n.get('noteType')));
@@ -39,19 +42,36 @@ export default Component.extend({
           $("#circle_btn_"+note_id).addClass('imgChange').html('<img src="../img/video/small_idea.svg" alt="">');
         }
 
-        $("textarea.autosize").on('keydown keyup', function () {
-            let sHeight = $(this).val().length;
-        		if(sHeight < 29){
-        			$(this).css('height','16px');
-        			$(this).next('button').css('line-height','')
-        		} else if(sHeight > 29 && sHeight <90) {
-        			$(this).css('height','48px');
-        			$(this).next('button').css('line-height','70px')
-        		} else {
-        			$(this).css('height','80px');
-        			$('.tWrite button').css('line-height','102px')
-        		}
-      	});
+        let notemsgarray = notesinfo.get('noteMsg').split('\n');
+        let noteDatatextrea ='';
+        let noteDatadiv ='';
+
+        for(var i=0, n=notemsgarray.length; i<n; i++){
+            let notemsgrow = notemsgarray[i];
+            if(i+1 === notemsgarray.length) {  // last
+              noteDatadiv +=  notemsgrow;
+            } else {
+              noteDatadiv +=  notemsgrow + '<br/>';
+            }
+        }
+
+        noteDatatextrea +=  notesinfo.get('noteMsg');
+        set(this, 'noteDatatextrea', noteDatatextrea);
+        set(this, 'noteDatadiv', noteDatadiv);
+
+        // $("textarea.autosize").on('keydown keyup', function () {
+        //     let sHeight = $(this).val().length;
+        // 		if(sHeight < 29){
+        // 			$(this).css('height','16px');
+        // 			$(this).next('button').css('line-height','')
+        // 		} else if(sHeight > 29 && sHeight <90) {
+        // 			$(this).css('height','48px');
+        // 			$(this).next('button').css('line-height','70px')
+        // 		} else {
+        // 			$(this).css('height','80px');
+        // 			$('.tWrite button').css('line-height','102px')
+        // 		}
+      	// });
 
         //GLOBAL.error('noteType1:' + JSON.stringify(notesinfo.get('noteType')));
     },
@@ -155,15 +175,19 @@ export default Component.extend({
       fnEditMode(idx){
         let thisobject = $('#editBox_' + idx);
         let parVal = thisobject.parents('.nl');
-        let textVal = parVal.find('.cmc').text();
+        let textVal = parVal.find('.cmc').html();
+        textVal = textVal.replace(/<br>/g, "\n");
+
         var textVal1 = parVal.find('.comment').children('textarea').val();
         thisobject.parent('span').hide();
         thisobject.parent('span').next('span').show();
         parVal.find('.comment').children('textarea').val(textVal).show().focus().prev('.cmc').hide();
         parVal.find('.comment').css('background','#f8f8f8');
 
-        let sHeight = textVal1.length;
+        //let sHeight = textVal1.length;
         let textarea_note = parVal.find('.comment').children('textarea');
+        let sHeight = textarea_note[0].scrollHeight;
+
         if(sHeight < 29){
             textarea_note.css('height','16px');
             textarea_note.next('button').css('line-height','')
@@ -181,11 +205,12 @@ export default Component.extend({
       fnSaveMode(idx){
         let thisobject = $('#conform_Save_' + idx);
         let parVal = thisobject.parents('.nl');
-        let textVal = parVal.find('.cmc').text();
+        let textVal = parVal.find('.cmc').html();
         var textVal1 = parVal.find('.comment').children('textarea').val();
+        textVal1 = textVal1.replace(/\n/g, "<br/>");
         thisobject.parent('span').hide();
         thisobject.parent('span').prev('span').show();
-        parVal.find('.comment').children('.cmc').text(textVal1).show().next('textarea').focusout().hide();
+        parVal.find('.comment').children('.cmc').html(textVal1).show().next('textarea').focusout().hide();
         parVal.find('.comment').css('background','');
         ucEngine.Chats.updateMsgItem(GLOBAL_MODULE.getConfID(), this.get('notesinfo.keyID'), {noteType: this.get('notesinfo.noteType'), msgData: textVal1});
         this.get('store').push({data: {id: idx, type: 'notes', attributes: {noteMsg: textVal1}}});

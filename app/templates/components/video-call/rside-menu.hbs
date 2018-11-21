@@ -40,7 +40,7 @@
         <div class="nWrite">
             <div class="con">
                 {{#if recon}}
-                    <textarea id="noteMsgType"  class="note" placeholder="Take some personal notes ..."></textarea>
+                    <textarea rows="3" id="noteMsgType"  class="note" placeholder="Take some personal notes ..." {{action "noteinputdata" on="input"}}></textarea>
                     {{#if chatKeyUpActivated}}
                         <button id="send_note_btn" {{action "sendNote"}}>Send</button>
                     {{else}}
