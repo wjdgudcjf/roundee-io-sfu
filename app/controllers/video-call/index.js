@@ -74,26 +74,57 @@ export default Controller.extend({
                     }
                 }.bind(this));
 
+                let mstate = this.get('model.myinfo.mstate');
+                let selectdevice = sessionStorage.getItem('selectdevice');
+                if(selectdevice!==undefined&&selectdevice!==null&&selectdevice!==""){
+                    selectdevice = GLOBAL.transStrToObj(selectdevice);
+                }
                 if(this.videodevicelist.length===0&&this.audiodevicelist.length===0){
                     // can't start video conference
                     this.get('store').push({data:{id: GLOBAL.getMyID(), type: 'member', attributes:{devicestatus: 'none', mstate: 'none'}}});
+                    ucEngine.Conf.updateConferenceUser(GLOBAL_MODULE.getConfID(), {devicestatus: 'none', mstate: 'none'});
                     this.set('checkdevice', false);
                 }
                 else{
                     if(this.videodevicelist.length>0&&this.audiodevicelist.length===0){
                         // can't start video conference
-                        this.get('store').push({data:{id: GLOBAL.getMyID(), type: 'member', attributes:{devicestatus: 'videoonly', mstate: 'videoonly'}}});
+                        mstate = mstate==='audioonly'?'none':'videoonly';
+                        this.get('store').push({data:{id: GLOBAL.getMyID(), type: 'member', attributes:{devicestatus: 'videoonly', mstate: mstate}}});
+                        ucEngine.Conf.updateConferenceUser(GLOBAL_MODULE.getConfID(), {devicestatus: 'videoonly', mstate: mstate});
+                        if(!selectdevice||!selectdevice.video){
+                            sessionStorage.setItem('selectdevice', GLOBAL.transObjToStr({video: this.videodevicelist[0].deviceId}));
+                        }
                         this.set('checkdevice', false);
                     }
                     else if(this.videodevicelist.length===0&&this.audiodevicelist.length>0){
-                        this.get('store').push({data:{id: GLOBAL.getMyID(), type: 'member', attributes:{devicestatus: 'audioonly', mstate: 'audioonly'}}});
-                        sessionStorage.setItem('selectdevice', GLOBAL.transObjToStr({audio: this.audiodevicelist[0].deviceId}));
+                        mstate = mstate==='videoonly'?'none':'audioonly';
+
+                        this.get('store').push({data:{id: GLOBAL.getMyID(), type: 'member', attributes:{devicestatus: 'audioonly', mstate: mstate}}});
+                        ucEngine.Conf.updateConferenceUser(GLOBAL_MODULE.getConfID(), {devicestatus: 'audioonly', mstate: mstate});
+                        if(!selectdevice||!selectdevice.audio){
+                            sessionStorage.setItem('selectdevice', GLOBAL.transObjToStr({audio: this.audiodevicelist[0].deviceId}));
+                        }
                         this.set('checkdevice', true);
                     }
                     else{
                         // this.get('store').push({data:{id: GLOBAL.getMyID(), type: 'member', attributes:{devicestatus: 'all', mstate: 'all'}}});
                         this.get('store').push({data:{id: GLOBAL.getMyID(), type: 'member', attributes:{devicestatus: 'all'}}});
-                        sessionStorage.setItem('selectdevice', GLOBAL.transObjToStr({video: this.videodevicelist[0].deviceId, audio: this.audiodevicelist[0].deviceId}));
+                        ucEngine.Conf.updateConferenceUser(GLOBAL_MODULE.getConfID(), {devicestatus: 'all'});
+                        if(!selectdevice){
+                            sessionStorage.setItem('selectdevice', GLOBAL.transObjToStr({video: this.videodevicelist[0].deviceId, audio: this.audiodevicelist[0].deviceId}));
+                        }
+                        else{
+                            let selectvideodevice = null;
+                            let selectaudiodevice = null;
+                            if(!selectdevice.video){
+                                selectvideodevice = this.videodevicelist[0].deviceId;
+                            }
+
+                            if(!selectdevice.audio){
+                                selectaudiodevice = this.audiodevicelist[0].deviceId;
+                            }
+                            sessionStorage.setItem('selectdevice', GLOBAL.transObjToStr({video: !selectvideodevice?selectdevice.video:selectvideodevice, audio: !selectaudiodevice?selectdevice.audio:selectaudiodevice}));
+                        }
                         this.set('checkdevice', true);
                     }
                 }

@@ -81,8 +81,21 @@ export default Route.extend({
                 let sessioninfo = sessionStorage.getItem('roundee_io:auth');
                 if(sessioninfo!==undefined&&sessioninfo!==null&&sessioninfo!==""){
                     sessioninfo = GLOBAL.transStrToObj(sessioninfo);
-                    this.set('session.accessToken', sessioninfo);
-                    this.session.restore(sessioninfo);
+
+                    if(transition.params['video-call.index']!==undefined){
+                        if(transition.params['video-call.index'].roomid===sessioninfo.roomid){
+                            this.set('session.accessToken', sessioninfo);
+                            this.session.restore(sessioninfo);
+                        }
+                        else{
+                            //this.set('session.accessToken', null);
+                            this.session.invalidate();
+                        }
+                    }
+                    else{
+                        this.set('session.accessToken', sessioninfo);
+                        this.session.restore(sessioninfo);
+                    }
                 }
 
                 if(!this.session.isAuthenticated){

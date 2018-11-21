@@ -2,8 +2,8 @@
 <nav id="bottommenu">
 <ul>
     <li><button {{action "openInvite" on="click"}}><img src="../img/video/invite.svg" alt=""><span>Invite</span></button></li>
-    <li>
-        <button {{action "videoOnOff" on="click"}}>
+    <li id="menuvideo">
+        <button id="btnvideo" {{action "videoOnOff" on="click"}}>
             {{#if videoon}}
                 <img src="../img/video/camera_on.svg" alt=""><span>Video off</span>
             {{else}}
@@ -11,8 +11,8 @@
             {{/if}}
         </button>
     </li>
-    <li>
-        <button {{action "micOnOff" on="click"}}>
+    <li id="menuaudio">
+        <button id="btnaudio" {{action "micOnOff" on="click"}}>
             {{#if audioon}}
                 <img src="../img/video/mic_on.svg" alt=""><span>Mic off</span>
             {{else}}

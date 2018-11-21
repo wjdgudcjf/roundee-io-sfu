@@ -175,8 +175,8 @@ export default Component.extend({
         ucEngine.Video.checkDevice({getDevice: this.getDeviceList.bind(this), getDeviceFail: this.getDeviceFail.bind(this)});
 
         if(this.get('myinfo.mstate')==='audioonly' || this.get('myinfo.mstate')==='none'){
-            if(!$(".cameraBg").hasClass("off")){
-                $(".cameraBg").addClass("off");
+            if(!$("#settingvideo").hasClass("off")){
+                $("#settingvideo").addClass("off");
             }
             let camradiovtndom = $("#pCam");
 
@@ -189,8 +189,8 @@ export default Component.extend({
         }
 
         if(this.get('myinfo.mstate')==='videoonly' || this.get('myinfo.mstate')==='none'){
-            if(!$(".soundBg").hasClass("off")){
-                $(".soundBg").addClass("off");
+            if(!$("#settingsound").hasClass("on")){
+                $("#settingsound").addClass("on");
             }
 
             let micdiovtndom = $("#pAudio");
@@ -321,7 +321,7 @@ export default Component.extend({
         mediaonoff(type){
             if(type==="cam"){
                 if(this.get('videodevicelist').length > 0){
-                    $(".cameraBg").toggleClass("on");
+                    $("#settingvideo").toggleClass("on");
                     let camradiovtndom = $("#pCam");
                     camradiovtndom.toggleClass("on");
                     if(camradiovtndom.hasClass("on")){
@@ -345,7 +345,7 @@ export default Component.extend({
             }
             else{
                 if(this.get('micdevicelist').length > 0){
-                    $(".soundBg").toggleClass("on");
+                    $("#settingsound").toggleClass("on");
                     let camradiovtndom = $("#pAudio");
                     camradiovtndom.toggleClass("on");
                     if(camradiovtndom.hasClass("on")){

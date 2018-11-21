@@ -29,11 +29,7 @@ export default Component.extend({
     }),
 
     unreadcount: computed('confinfo.unreadcnt', 'chatdata.[]', function(){
-        //let unreadcnt = this.get('confinfo.unreadcnt');
         let unreadcnt = 0;
-        // if(unreadcnt<=0 || !unreadcnt){
-        //     return null;
-        // }
 
         let logmsg_info = this.get('store').peekAll('logmsg').toArray();
         if(logmsg_info.length>0) {
@@ -53,7 +49,53 @@ export default Component.extend({
         return unreadcnt;
     }),
 
-    mediastatus: computed('myinfo.mstate', function(){
+    mediastatus: computed('myinfo.{mstate,devicestatus}', function(){
+        if(this.get('myinfo.devicestatus')==='all'){
+            if($("#menuvideo").hasClass('disable')){
+                $("#menuvideo").removeClass('disable');
+            }
+            $("#btnvideo").prop('disabled', false);
+
+            if($("#menuaudio").hasClass('disable')){
+                $("#menuaudio").removeClass('disable');
+            }
+            $("#btnaudio").prop('disabled', false);
+        }
+        else if(this.get('myinfo.devicestatus')==='none'){
+            if(!$("#menuvideo").hasClass('disable')){
+                $("#menuvideo").addClass('disable');
+            }
+            $("#btnvideo").prop('disabled', true);
+
+            if(!$("#menuaudio").hasClass('disable')){
+                $("#menuaudio").addClass('disable');
+            }
+            $("#btnaudio").prop('disabled', true);
+        }
+        else if(this.get('myinfo.devicestatus')==='audioonly'){
+            if(!$("#menuvideo").hasClass('disable')){
+                $("#menuvideo").addClass('disable');
+            }
+            $("#btnvideo").prop('disabled', true);
+
+            if($("#menuaudio").hasClass('disable')){
+                $("#menuaudio").removeClass('disable');
+            }
+            $("#btnaudio").prop('disabled', false);
+        }
+        else if(this.get('myinfo.devicestatus')==='videoonly'){
+            if($("#menuvideo").hasClass('disable')){
+                $("#menuvideo").removeClass('disable');
+            }
+            $("#btnvideo").prop('disabled', false);
+
+            if(!$("#menuaudio").hasClass('disable')){
+                $("#menuaudio").addClass('disable');
+            }
+            $("#btnaudio").prop('disabled', true);
+        }
+
+
         switch (this.get('myinfo.mstate')) {
             case 'all':{
                 this.set('videoon', true);
@@ -172,6 +214,16 @@ export default Component.extend({
         if(adapter.browserDetails.browser==='safari'){
             $("#menuscreenshare").addClass('disable sf');
             $("#btnscreenshare").prop('disabled', true);
+        }
+
+        if(this.get('myinfo.devicestatus')==='audioonly' || this.get('myinfo.devicestatus')==='none'){
+            $("#menuvideo").addClass('disable');
+            $("#btnvideo").prop('disabled', true);
+        }
+
+        if(this.get('myinfo.devicestatus')==='videoonly' || this.get('myinfo.devicestatus')==='none'){
+            $("#menuaudio").addClass('disable');
+            $("#btnaudio").prop('disabled', true);
         }
     },
 

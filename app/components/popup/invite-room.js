@@ -212,7 +212,15 @@ export default Component.extend({
                   }.bind(this);
 
                 //sending email
-                ucEngine.Conf.inviteConferenceRoom(GLOBAL_MODULE.getConfID(), body, {onComplete:conferenceInviteComplete.bind(this)});
+                ucEngine.Conf.inviteConferenceRoom(GLOBAL_MODULE.getConfID(), body, {onComplete:conferenceInviteComplete.bind(this), onError: function(e){
+                    let responsecode = e.header[1];
+                    if(responsecode==='404'){
+
+                    }
+                    else if(responsecode==='410'){
+
+                    }
+                }.bind(this) });
             }
         }
     }
