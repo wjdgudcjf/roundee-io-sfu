@@ -143,22 +143,43 @@ export default Component.extend({
             containerwidth = parseFloat(containerwidth/2);
         }
         else if(totalviewercount===3 || totalviewercount===4){
-            if( (parseFloat(containerwidth/2) * parseFloat(containerheight/2))*4 <= parseFloat(containerwidth * containerheight)){
+            let tempviewercontainerwidth = parseFloat(containerwidth/totalviewercount);
+            let tempviewercontainerheight = parseFloat(tempviewercontainerwidth /  realratio);
+
+            if(parseFloat(tempviewercontainerheight*2) > containerheight){
+                containerwidth = parseFloat(containerwidth/totalviewercount);
+            }
+            else{
                 containerwidth = parseFloat(containerwidth/2 - 10);
                 containerheight = parseFloat(containerheight/2 - 10);
             }
-            else{
-                containerwidth = parseFloat(containerwidth/totalviewercount);
-            }
+            // if( (parseFloat(containerwidth/2) * parseFloat(containerheight/2))*4 <= parseFloat(containerwidth * containerheight)){
+            //     containerwidth = parseFloat(containerwidth/2 - 10);
+            //     containerheight = parseFloat(containerheight/2 - 10);
+            // }
+            // else{
+            //     containerwidth = parseFloat(containerwidth/totalviewercount);
+            // }
         }
         else if(totalviewercount===5 || totalviewercount===6 ){
-            if( (parseFloat(containerwidth/3) * parseFloat(containerheight/2))*6 <= parseFloat(containerwidth * containerheight)){
+            let tempviewercontainerwidth = parseFloat(containerwidth/totalviewercount);
+            let tempviewercontainerheight = parseFloat(tempviewercontainerwidth /  realratio);
+
+            if(parseFloat(tempviewercontainerheight*2) > containerheight){
+                containerwidth = parseFloat(containerwidth/totalviewercount);
+            }
+            else{
                 containerwidth = parseFloat(containerwidth/3 - 15);
                 containerheight = parseFloat(containerheight/2 - 10);
             }
-            else{
-                containerwidth = parseFloat(containerwidth/totalviewercount);
-            }
+
+            // if( (parseFloat(containerwidth/3) * parseFloat(containerheight/2))*6 <= parseFloat(containerwidth * containerheight)){
+            //     containerwidth = parseFloat(containerwidth/3 - 15);
+            //     containerheight = parseFloat(containerheight/2 - 10);
+            // }
+            // else{
+            //     containerwidth = parseFloat(containerwidth/totalviewercount);
+            // }
         }
 
         if(containerratio > realratio){
