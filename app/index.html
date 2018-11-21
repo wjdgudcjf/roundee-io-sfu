@@ -10,11 +10,22 @@
     <meta http-equiv="Pragma" content="no-cache"/>
     <meta http-equiv="Expires" content="0" />
 
+    <meta property="og:title" content="Video Call 🤙 | Roundee" />
+    <meta property="og:description" content="Web browser based video calls with up to 6 people - No login, No downloads, and free!" />
+    <meta property="og:url" content="https://roundee.io"/>
+    <meta property="og:image" content="#"/>
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Video Call 🤙 | Roundee" />
+    <meta name="twitter:description" content="Web browser based video calls with up to 6 people - No login, No downloads, and free!" />
+    <meta name="twitter:url" content="https://roundee.io"  />
+    <meta name="twitter:image" content="#">
+
     {{content-for "head"}}
 
     <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/nhgakmconlchcjjjcligmohaijmgcbkd">
     <link integrity="" rel="stylesheet" href="{{rootURL}}assets/vendor.css">
-    <link integrity="" rel="stylesheet" href="{{rootURL}}assets/roundee-io-sfu-v1.3.0.css">
+    <link integrity="" rel="stylesheet" href="{{rootURL}}assets/roundee-io-sfu.css">
 
     {{content-for "head-footer"}}
   </head>
@@ -26,26 +37,11 @@
             var url = window.location.href;
             window.location.replace("https://askee.io/browser-not-supported?urlkey=" + url);
       }
-
-      if(window.location.href.indexOf('sign-in?id=')!==-1) {
-          sessionStorage.setItem('signin', false);
-      } else {
-          if(window.location.href.indexOf('/video-call/')!==-1){
-              if(window.location.href.indexOf('?id=')!==-1) {
-                  sessionStorage.setItem('signin', false);
-              } else {
-                  sessionStorage.setItem('signin', true);
-              }
-          } else {
-              sessionStorage.setItem('signin', true);
-          }
-      }
-
     </script>
 
     <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
     <script src="{{rootURL}}assets/vendor.js"></script>
-    <script src="{{rootURL}}assets/roundee-io-sfu-v1.3.0.js"></script>
+    <script src="{{rootURL}}assets/roundee-io-sfu.js"></script>
 
     {{content-for "body-footer"}}
   </body>

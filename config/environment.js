@@ -2,7 +2,7 @@
 
 module.exports = function(environment) {
   let ENV = {
-    modulePrefix: 'roundee-io-sfu-v1.3.0',
+    modulePrefix: 'roundee-io-sfu',
     environment,
     rootURL: '/openvc/',
     locationType: 'auto',
