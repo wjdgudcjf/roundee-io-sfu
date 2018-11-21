@@ -1,0 +1,57 @@
+{{mediastatus}}
+<nav id="bottommenu">
+<ul>
+    <li><button {{action "openInvite" on="click"}}><img src="../img/video/invite.svg" alt=""><span>Invite</span></button></li>
+    <li>
+        <button {{action "videoOnOff" on="click"}}>
+            {{#if videoon}}
+                <img src="../img/video/camera_on.svg" alt=""><span>Video off</span>
+            {{else}}
+                <img src="../img/video/camera_off.svg" class="off" alt=""><span>Video on</span>
+            {{/if}}
+        </button>
+    </li>
+    <li>
+        <button {{action "micOnOff" on="click"}}>
+            {{#if audioon}}
+                <img src="../img/video/mic_on.svg" alt=""><span>Mic off</span>
+            {{else}}
+                <img src="../img/video/mic_off.svg" class="off" alt=""><span>Mic on</span>
+            {{/if}}
+        </button>
+    </li>
+    <li id="menuscreenshare">
+        <!-- 사파리인경우 -->
+        <div class="eMsg">Not supported in Safari</div>
+        <!-- 타유저가 공유중인 경우 -->
+        <div class="cMsg">Currently in use.</div>
+        <button id="btnscreenshare" {{action "startscreenshare" on="click"}}><img src="../img/video/screenshare.svg" alt=""><span>Share screen</span></button>
+    </li>
+    {{#if host}}
+        {{!-- <li class="record"><button {{action "recOnOff" on="click"}} class="rec"><img src="../img/video/rec.svg" alt=""><span>Rec</span></button></li> --}}
+        <li class="record">
+            <button {{action "recOnOff" on="click"}} class="rec" id="recBtn">
+                {{checkrecstate}}
+                {{#if recon}}
+                    <img src="../img/video/rec_active.svg" alt="">
+                    <span>{{rectime}}</span>
+                {{else}}
+                    {{#if recordings.length}}
+                        <img src="../img/video/rec_pause.svg" alt="">
+                        <span>{{rectime}}</span>
+                    {{else}}
+                        <img src="../img/video/rec.svg" alt="">
+                        <span>Rec</span>
+                    {{/if}}
+                {{/if}}
+            </button>
+        </li>
+    {{/if}}
+    <li><button {{action "chatAreaOpen" "chat" on="click"}}><img src="../img/video/chat.svg" alt=""><span>Chat</span>{{#if unreadcount}}<strong>{{unreadcount}}</strong>{{/if}}</button></li>
+    {{#if host}}
+        <li><button {{action "chatAreaOpen" "note" on="click"}}><img src="../img/video/bookmark.svg" alt=""><span>Notes</span></button></li>
+    {{/if}}
+    <li><button {{action "setting" on="click"}}><img src="../img/video/setting.svg" alt=""><span>Settings</span></button></li>
+    <li><button {{action "leaveRoom" on="click"}}><img src="../img/video/leave.svg" alt=""><span>Leave</span></button></li>
+</ul>
+</nav>

@@ -1,0 +1,68 @@
+<div class="cPopCon">
+    <div class="con">
+        <h3>Before you start</h3>
+        <dl>
+            <dt class="popVideo">
+                {{#if isSafari}}
+                    <video id="my_Video" width="100%" height="100%" autoplay playsinline muted></video>
+                {{else}}
+                    <video id="my_Video" width="100%" height="100%" autoplay muted></video>
+                {{/if}}
+
+                <div class="cameraBg"></div>
+                <div class="soundBg"></div>
+            </dt>
+            <dd class="hName" {{action "changeDisplayName" on="click"}}>
+                <strong id="labeldisplayname" class="nc">✍️{{myinfo.displayname}}</strong>
+                <input id="inputdisplayname" type="text" value={{displayname}} title="display name" style="display:none;">
+            </dd>
+        </dl>
+        {{#unless videodevicelist}}
+            <div class="Noti">No camera has been detected.</div>
+        {{/unless}}
+        <dl id="cameraselect">
+            <dt>Camera</dt>
+            <dd style="overflow: unset;">
+                <div class="left custom-select" {{action "dropdown" "video" on="click"}} style="overflow: unset;">
+                    <div id="selectvideo" class="select-selected">{{selectvideodevice}}</div>
+                    <div id="videolist" class="select-items select-hide">
+                        {{#each videodevicelist as |videodevice|}}
+                            <div {{action "changedevice" "video"  videodevice.deviceId on="click"}}>{{videodevice.label}}</div>
+                        {{/each}}
+                    </div>
+                </div>
+                <div class="right">
+                    <strong>On</strong>
+                    <div class="bar on" id="pCam">
+                        <button {{action "mediaonoff" "cam" on="click"}}>on</button>
+                    </div>
+                </div>
+            </dd>
+        </dl>
+        <dl>
+            <dt>Microphone</dt>
+            <dd style="overflow: unset;">
+                {{!-- <div class="left" style="overflow: unset;"> --}}
+                <div class="left custom-select" {{action "dropdown" "mic" on="click"}} style="overflow: unset;">
+                    <div id="selectmic"class="select-selected">{{selectmicdevice}}</div>
+                    <div id="miclist" class="select-items select-hide">
+                        {{#each micdevicelist as |micdevice|}}
+                            <div {{action "changedevice" "mic"  micdevice.deviceId on="click"}}>{{micdevice.label}}</div>
+                        {{/each}}
+                    </div>
+                </div>
+                {{!-- </div> --}}
+                <div class="right">
+                    <strong>On</strong>
+                    <div class="bar on" id="pAudio">
+                        <button {{action "mediaonoff" "audio" on="click"}}>on</button>
+                    </div>
+                </div>
+            </dd>
+        </dl>
+        <div class="voiceCheck">
+            <canvas id="meter" width="220" height="4"></canvas>
+        </div>
+        <div class="btn_block"><button {{action "startmeeting" on="click"}}>Enter meeting</button></div>
+    </div>
+</div>

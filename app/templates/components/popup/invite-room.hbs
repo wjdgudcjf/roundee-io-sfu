@@ -1,0 +1,40 @@
+<div class="linkPop">
+    <dl>
+        <dt>Link copied! - Paste and send anywhere</dt>
+        <dd>{{currentURL}}</dd>
+    </dl>
+</div>
+<div class="popup_in">
+    <h3>Invite People </h3>
+    <ul>
+        <li>Add multiple emails separated by commas</li>
+        <li>
+            <input type="email" id="email-invite" title="Type your guests' email" placeholder="Type your guests' email...">
+            <button class="btn" {{action "send_ind"}}>Invite</button>
+            {{#if sendinvite}}
+                <div class="sendemail">Invite email has been sent.</div>
+            {{/if}}
+            <div class="wrong">Error. Please enter a valid email address.</div>
+            {{!-- {{#unless checkemail}}
+                <div class="wrong">Error. Please enter a valid email address.</div>
+            {{/unless}} --}}
+            <div class="full">Full capacity reached (conference full)</div>
+        </li>
+        <li>
+            <button class="link" {{action "copylink"}}>Copy invite link</button> <span id="currenturl" style="display:none;">{{currentURL}}</span>
+        </li>
+        <li>
+            <strong>{{livepaticipants}}/6</strong> Seats available
+            <div class="email">
+                <strong></strong> Email invitations pending <img src="../img/video/info.svg" alt="mailInfo">
+                <div class="mailPop">
+                    <div class="mailcon">
+                        <ul></ul>
+                        {{pendingpaticipants}}
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <div class="close"><button {{action "closePopup"}}><img src="../img/video/btn_close.svg" alt="close"></button></div>
+</div>

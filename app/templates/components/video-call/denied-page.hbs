@@ -1,0 +1,52 @@
+{{browserchecking}}
+<div id="flexWrap">
+      <div class="container_in">
+        <section>
+          <h1><img src="../img/video/logo.svg" alt="ROUNDEE.IO"></h1>
+          {{#if ischrome}}
+              <div class="notiC">Change settings by clicking on the camera icon next to the star in the address bar and then click refresh browser.</div>
+              <div class="refreshCon">
+                <ul >
+                  <li>roundee.io has been blocked from <br>accessing your camera and microphone.</li>
+                  <li><button class="btn" {{action "refreshBrowser"}}>Refresh browser</button></li>
+                  <li class="last">Make sure to have a webcam connected <br>to your computer.</li>
+                </ul>
+              </div>
+          {{/if}}
+
+          {{#if issafari}}
+              <div class="refreshCon">
+    						<ul>
+    							<li>roundee.io has been blocked from <br>accessing your camera and microphone.</li>
+    							<li><button class="btn" {{action "refreshBrowser"}}>Refresh browser</button></li>
+    							<li class="last">Make sure to have a webcam connected <br>to your computer.</li>
+    						</ul>
+    					</div>
+          {{/if}}
+
+          {{#if isfirefox}}
+              <div class="notiF">Change settings by clicking on the camera icon next to the star in the address bar and then click refresh browser.</div>
+    					<div class="refreshCon">
+    						<ul >
+    							<li>roundee.io has been blocked from <br>accessing your camera and microphone.</li>
+    							<li><button class="btn" {{action "refreshBrowser"}}>Refresh browser</button></li>
+    							<li class="last">Make sure to have a webcam connected <br>to your computer.</li>
+    						</ul>
+    					</div>
+          {{/if}}
+
+          {{#if isopera}}
+              <div class="refreshCon">
+    						<ul>
+    							<li>roundee.io has been blocked from <br>accessing your camera and microphone.</li>
+    							<li>To re-enable go to <br><span>Opera/Settings > Preferences > Advanced</span> <br><span>> Content > Blocked Content button.</span>
+    							<br><br>and then click refresh browser</li>
+    							<li><button class="btn" {{action "refreshBrowser"}}>Refresh browser</button></li>
+    							<li class="last">Make sure to have a webcam connected <br>to your computer.</li>
+    						</ul>
+    					</div>
+          {{/if}}
+
+        </section>
+      </div>
+</div>

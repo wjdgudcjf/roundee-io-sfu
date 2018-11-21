@@ -1,0 +1,15 @@
+{{#if leavemodel}}
+    {{popup/leave-room id="LeavePop" confinfo=model}}
+{{/if}}
+
+{{#if issettingmodal}}
+    {{popup/video-call-setting id="settingPop" myinfo=model handle=handle}}
+{{/if}}
+
+{{#if ispreparemodal}}
+    {{popup/prepare-room id="prepare-room" peerIM=model handle=handle}}
+{{/if}}
+
+{{#if isinvitemodal}}
+    {{popup/invite-room id="invite-room" members=model handle=handle}}
+{{/if}}

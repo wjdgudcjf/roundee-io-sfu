@@ -1,0 +1,8 @@
+{{#if isAuthenticated}}
+    {{membercount}}
+    {{conferencestate}}
+    {{#if checkdevice}}
+        {{video-call/video-call confinfo=model.roominfo members=model.members chatdata=model.chatdata myinfo=model.myinfo recordings=model.recordings notesdata=model.notesdata videodevicelist=videodevicelist audiodevicelist=audiodevicelist}}
+        {{outlet "modal"}}
+    {{/if}}
+{{/if}}

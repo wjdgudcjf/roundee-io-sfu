@@ -1,0 +1,158 @@
+{{!--  Host 경우는 Chat/Note가 모두 보여야 함. --}}
+{{#if host}}
+    <h4 id="Chat" class="on" {{action "open_ChatNote" "Chat"}}><button>Chat</button></h4>
+{{else}}
+    <h4 id="Chat" class="on guestView" {{action "open_ChatNote" "Chat"}}><button disabled>Chat</button></h4>
+{{/if}}
+
+{{#if host}}
+    <h4 id="Notes" class="on" {{action "open_ChatNote" "Notes"}}><button>Notes</button></h4>
+{{/if}}
+
+
+{{!--  chat --}}
+{{#if showchat}}
+    <div class="chat">
+        <div id="chatCon" class="chatCon">
+            <div class="first">Public Chat</div>
+            {{#each msgdata as |msg index|}}
+                {{chat-area/msg-box id=msg.msgID msginfo=msg index=index}}
+            {{/each}}
+        </div>
+        <div class="tWrite">
+            <textarea rows="3" id="chatMsgType" class="autosize" placeholder="Type here ..." autofocus {{action "inputdata" on="input"}}></textarea>
+            <button id="send_btn" {{action "sendMsg_form"}}>Send</button>
+        </div>
+    </div>
+{{else}}
+    <div class="notes" id="note-msg-area-div">
+        <div class="first">
+            <span class="nTit">PERSONAL TIMESTAMPED NOTES</span>
+            <span>No time to write down?</span>
+            <span>Hit <strong>“Alt + N”</strong>	to leave a</span>
+            <span>blank note and edit later.</span>
+        </div>
+
+        {{#each notesbox as |item index|}}
+            {{notes/note-box notesinfo=item index=index}}
+        {{/each}}
+
+        <div class="nWrite">
+            <div class="con">
+                {{#if recon}}
+                    <textarea id="noteMsgType"  class="note" placeholder="Take some personal notes ..."></textarea>
+                    {{#if chatKeyUpActivated}}
+                        <button id="send_note_btn" {{action "sendNote"}}>Send</button>
+                    {{else}}
+                        <button id="noteIcon" {{action "fnOpenPop_icon" "Icon2" on="click"}}><img src="../img/video/icon_note.svg" alt=""></button>
+                    {{/if}}
+                {{else}}
+                    <textarea id="noteMsgType" class="note" placeholder="Press the Rec button to take notes." readonly></textarea>
+                    <button id="noteIcon" disabled><img src="../img/video/icon_note_gray.svg" alt=""></button>
+                {{/if}}
+
+                <div class="iconPop" id="Icon2">
+                    <div class="iconBg" {{action "fnClose" "Icon2"}}></div>
+                    <div class="con">
+                        <h5>Add a quick note</h5>
+                        <div class="ic">
+                            <button id="favorite" {{action "selecticon" "favorite" on="click"}}>
+                                <span class="icon"><img src="../img/video/noteIcon1_on.svg" alt=""></span>
+                                <span class="txt">Favorite</span>
+                            </button>
+
+                            <button id="question" {{action "selecticon" "question" on="click"}}>
+                                <span class="icon"><img src="../img/video/noteIcon2_on.svg" alt=""></span>
+                                <span class="txt">Question</span>
+                            </button>
+
+                            <button id="money" {{action "selecticon" "money" on="click"}}>
+                                <span class="icon"><img src="../img/video/noteIcon3_on.svg" alt=""></span>
+                                <span class="txt">Money</span>
+                            </button>
+
+                            <button id="calendar" {{action "selecticon" "calendar" on="click"}}>
+                                <span class="icon"><img src="../img/video/noteIcon4_on.svg" alt=""></span>
+                                <span class="txt">Calendar</span>
+                            </button>
+
+                            <button id="idea" {{action "selecticon" "idea" on="click"}}>
+                                <span class="icon"><img src="../img/video/noteIcon5_on.svg" alt=""></span>
+                                <span class="txt">Idea</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{{/if}}
+
+{{!-- {{#if host}}
+    <h4 id="Notes" class="on" {{action "open_ChatNote" "Notes"}}><button>Notes</button></h4>
+
+    <div class="notes" id="note-msg-area-div">
+        <div class="first">
+            <span class="nTit">PERSONAL TIMESTAMPED NOTES</span>
+            <span>No time to write down?</span>
+            <span>Hit <strong>“Alt + N”</strong>	to leave a</span>
+            <span>blank note and edit later.</span>
+        </div>
+
+        {{#each notesbox as |item index|}}
+            {{notes/note-box notesinfo=item index=index}}
+        {{/each}}
+
+        <div class="nWrite">
+            <div class="con">
+                {{#if recon}}
+                    <textarea id="noteMsgType"  class="note" placeholder="Take some personal notes ..."></textarea>
+                    {{#if chatKeyUpActivated}}
+                        <button id="send_note_btn" {{action "sendNote"}}>Send</button>
+                    {{else}}
+                        <button id="noteIcon" {{action "fnOpenPop_icon" "Icon2" on="click"}}><img src="../img/video/icon_note.svg" alt=""></button>
+                    {{/if}}
+                {{else}}
+                    <textarea id="noteMsgType" class="note" placeholder="Press the Rec button to take notes." readonly></textarea>
+                    <button id="noteIcon" disabled><img src="../img/video/icon_note_gray.svg" alt=""></button>
+                {{/if}}
+
+
+                <div class="iconPop" id="Icon2">
+                    <div class="iconBg" {{action "fnClose" "Icon2"}}></div>
+                    <div class="con">
+                        <h5>Add a quick note</h5>
+                        <div class="ic">
+                            <button id="favorite" {{action "selecticon" "favorite" on="click"}}>
+                                <span class="icon"><img src="../img/video/noteIcon1_on.svg" alt=""></span>
+                                <span class="txt">Favorite</span>
+                            </button>
+
+                            <button id="question" {{action "selecticon" "question" on="click"}}>
+                                <span class="icon"><img src="../img/video/noteIcon2_on.svg" alt=""></span>
+                                <span class="txt">Question</span>
+                            </button>
+
+                            <button id="money" {{action "selecticon" "money" on="click"}}>
+                                <span class="icon"><img src="../img/video/noteIcon3_on.svg" alt=""></span>
+                                <span class="txt">Money</span>
+                            </button>
+
+                            <button id="calendar" {{action "selecticon" "calendar" on="click"}}>
+                                <span class="icon"><img src="../img/video/noteIcon4_on.svg" alt=""></span>
+                                <span class="txt">Calendar</span>
+                            </button>
+
+                            <button id="idea" {{action "selecticon" "idea" on="click"}}>
+                                <span class="icon"><img src="../img/video/noteIcon5_on.svg" alt=""></span>
+                                <span class="txt">Idea</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{{/if}} --}}
+<div class="close"><button {{action "chatAreaClose"}}><img src="../img/video/btn_close.svg" alt="Close"></button></div>

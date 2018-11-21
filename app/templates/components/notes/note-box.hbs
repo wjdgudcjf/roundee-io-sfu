@@ -1,0 +1,67 @@
+<div class="time" id={{notesinfo.id}}>
+    <span>@ {{notesinfo.noteTimer}}</span>
+    <button id="circle_btn_{{notesinfo.id}}" class="circle" {{action "fnOpenPop_icon" notesinfo.id on="click"}}>+</button>
+
+    <div class="iconPop" id="Icon_{{notesinfo.id}}">
+        <div class="iconBg" {{action "fnClose_icon" notesinfo.id}}></div>
+        <div class="con">
+            <h5>Categorize your notes</h5>
+            <div class="ic">
+                  <button id="favorite_{{notesinfo.id}}" {{action "selecticon" notesinfo.id "favorite" on="click"}}>
+                      <span class="icon"><img src="../img/video/noteIcon1_on.svg" alt=""></span>
+                      <span class="txt">Favorite</span>
+                  </button>
+
+                  <button id="question_{{notesinfo.id}}" {{action "selecticon" notesinfo.id "question" on="click"}}>
+                      <span class="icon"><img src="../img/video/noteIcon2_on.svg" alt=""></span>
+                      <span class="txt">Question</span>
+                  </button>
+
+                  <button id="money_{{notesinfo.id}}" {{action "selecticon" notesinfo.id "money" on="click"}}>
+                      <span class="icon"><img src="../img/video/noteIcon3_on.svg" alt=""></span>
+                      <span class="txt">Money</span>
+                  </button>
+
+                  <button id="calendar_{{notesinfo.id}}" {{action "selecticon" notesinfo.id "calendar" on="click"}}>
+                      <span class="icon"><img src="../img/video/noteIcon4_on.svg" alt=""></span>
+                      <span class="txt">Calendar</span>
+                  </button>
+
+                  <button id="idea_{{notesinfo.id}}" {{action "selecticon" notesinfo.id "idea" on="click"}}>
+                      <span class="icon"><img src="../img/video/noteIcon5_on.svg" alt=""></span>
+                      <span class="txt">Idea</span>
+                  </button>
+            </div>
+            <div class="eBox" >
+              <button id="remove_cat_btn_{{notesinfo.id}}" {{action "removecategory" notesinfo.id on="click"}}>No Category</button>
+          </div>
+        </div>
+    </div>
+    <span class="editBox">
+        <button id="delete_btn_{{notesinfo.id}}" {{action "fnOpenPop_del" notesinfo.id on="click"}}>Delete</button>
+        <button id="editBox_{{notesinfo.id}}" {{action "fnEditMode" notesinfo.id on="click"}}>Edit</button>
+    </span>
+    <span class="conformBox">
+        <button id="conform_Save_{{notesinfo.id}}" {{action "fnSaveMode"  notesinfo.id on="click"}}>Save</button>
+        <button id="cancel_Save_{{notesinfo.id}}" {{action "fnCancelMode" notesinfo.id on="click"}}>Cancel</button>
+    </span>
+</div>
+
+<div class="comment">
+    {{#if notesinfo.noteMsg}}
+        <div class="cmc">{{notesinfo.noteMsg}}</div>
+        <textarea class="autosize">{{notesinfo.noteMsg}}</textarea>
+    {{else}}
+        <div class="cmc">Blank note</div>
+        <textarea class="autosize">Blank note</textarea>
+    {{/if}}
+</div>
+
+<div class="del" style="display:none;" id="Del_{{notesinfo.id}}">
+    <h5>Are you sure to delete this note?</h5>
+    <div class="bt">
+        <button>Cancel</button>
+        <button>Delete</button>
+    </div>
+    <div class="con">{{notesinfo.noteMsg}}</div>
+</div>

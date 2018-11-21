@@ -1,0 +1,11 @@
+{{#if notification.title}}
+    <div id="notiTitle_wrap" class={{notiTitleClass}}>{{notification.title}}</div>
+    <div id="notiTitle_content" class={{notiTitleContentClass}}>{{{notification.message}}}</div>
+    {{#if showclose}}
+        <div class="close">
+            <button {{action "closenotification"}}> <img src="../img/video/btn_close.svg" alt="close"> </button>
+        </div>
+    {{/if}}
+{{else}}
+  <div id="notiTitle_content" class={{notiTitleContentClass}}>{{{notification.message}}}</div>
+{{/if}}

@@ -1,0 +1,228 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-weight: inherit;
+  font-style: inherit;
+  font-size: 100%;
+  font-family: inherit;
+  vertical-align: baseline;
+}
+
+html, body, dl, ul, ol, li, input, label, textarea, dt, dd, div, a, span, h1, h2, h3, h4, h5, h6, button {
+  list-style: none;
+  font-size: 12px;
+  color: #555;
+  line-height: 20px;
+  font-family: 'Asap', sans-serif;
+  outline: none;
+}
+
+#container > .ember-view {
+    width: 100%;
+    height: 100%;
+}
+
+h3 {
+  font-family: 'Asap Condensed', sans-serif;
+  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.3);
+  -webkit-user-select: text;
+  /* Chrome all / Safari all */
+  -moz-user-select: text;
+  /* Firefox all */
+  -ms-user-select: text;
+  /* IE 10+ */
+  user-select: text;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+a {
+  text-decoration: none;
+  position: relative;
+}
+
+img {
+  vertical-align: middle;
+}
+
+h1 {
+  font-size: 40px;
+  text-align: center;
+  line-height: 60px;
+  font-weight: 600;
+  clear: both;
+}
+
+h3 {
+  font-size: 18px;
+  line-height: 24px;
+  color: #333;
+  text-align: left;
+}
+
+h4, h5 {
+  font-family: 'Asap Condensed', sans-serif;
+}
+
+input:focus {
+  outline: none;
+}
+
+select {
+  &:focus, &:active {
+    outline: none;
+  }
+}
+
+a:focus {
+  outline: none;
+}
+
+.hidden {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+}
+
+.dsin{
+  display:inline-block;
+}
+
+.nc {
+    max-width: 100px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* location */
+
+.location {
+  position: relative;
+  width: 1200px;
+  margin: 0 auto;
+  background: #f8f8f8;
+  margin-top: 50px;
+  border-top: 1px solid #ccc;
+  overflow: hidden;
+  li {
+    display: inline-block;
+    width: 25%;
+    text-align: center;
+    float: left;
+    border-bottom: 1px solid #ccc;
+    &:hover a {
+      background: #323b51;
+      color: #fff;
+    }
+    a {
+      display: block;
+      border-right: 1px solid #ccc;
+      font-size: 20px;
+      line-height: 40px;
+      height: 40px;
+    }
+    &:nth-child(4n + 1) {
+      clear: both;
+      a {
+        border-left: 1px solid #ccc;
+      }
+    }
+  }
+}
+
+/**/
+
+.rotation {
+    transform: rotateY(180deg);
+   -webkit-transform:rotateY(180deg); /* Safari and Chrome */
+   -moz-transform:rotateY(180deg); /* Firefox */
+}
+
+select {
+    padding-right: 10px;
+    -moz-appearance: none;
+    display: block;
+    position: relative;
+    -webkit-appearance: none;
+    appearance: none;
+    background: url('../img/video/bg_select.png') no-repeat 95% center;
+    padding-right: 10% !important;
+}
+
+.autosize {
+    resize: none;
+    border: none;
+    padding: 10px;
+    background: none;
+    width: 263px;
+    font-size: 14px;
+    color: #333;
+    line-height: 16px;
+    height: 16px;
+    vertical-align: middle;
+}
+
+button {
+    cursor: pointer;
+    background: none;
+    border: none;
+    outline: none;
+    &:disabled {
+    opacity: 0.5;
+    }
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: none;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  outline: 1px solid slategrey;
+  border-radius: 5px;
+}
+
+.behindBg {
+  background: #323b51;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0.5;
+  position: fixed;
+}
+
+/* firefox*/
+@-moz-document url-prefix() {
+  .conference .screen .share .icon {
+    display: none;
+    margin: 0 auto;
+    &.ff {
+      display: block;
+      width: 22%;
+      margin-top: 15%;
+      img {
+        width: 100%;
+      }
+    }
+  }
+}
+
+button::-moz-focus-inner {
+  border: 0;
+}

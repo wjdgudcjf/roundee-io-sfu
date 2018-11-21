@@ -1,0 +1,20 @@
+.screen .share {
+  .uNav {
+    top: 10px;
+  }
+  &.fScreen {
+    position: fixed;
+    width: 100% !important;
+    height: 100% !important;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.5);
+    .uNav {
+      display: none;
+    }
+    .uNavClose {
+      display: block !important;
+    }
+  }
+}

@@ -1,0 +1,22 @@
+<section>
+    <h1><img src="./img/video/logo.svg" alt="ROUNDEE.IO"></h1>
+    <div class="error">
+        {{!-- <!-- meeting --> --}}
+        <dl class="meeting">
+            <dt>Join a meeting as guest</dt>
+            <dd>
+                <ul>
+                    <li>email address️</li>
+                    <li>
+                        {{input id="inputuser" type="email" placeholder="Type your email ..." value=userid enter=(action "joinmeeting") autofocus="autofocus"}}
+                        {{!-- <!-- 잘못된 이메일 입력시 --> --}}
+                        {{#unless errorcheck}}
+                            <span class="eMessge">Error. Please enter a valid email address.</span>
+                        {{/unless}}
+                    </li>
+                    <li><button class="btn" {{action "joinmeeting"}}>Join meeting</button></li>
+                </ul>
+            </dd>
+        </dl>
+    </div>
+</section>

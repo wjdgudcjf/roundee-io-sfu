@@ -1,0 +1,28 @@
+{{#if checksuccess}}
+    {{#if connectconference}}
+        {{screensharestate}}
+        {{#if showlobby}}
+            {{video-call/lobby-room host=host confinfo=confinfo members=members myinfo=myinfo recordings=recordings  startmeeting=(action "startmeeting") changedevice=(action "changedevice")}}
+        {{else}}
+            <div class="screen">
+                {{notify/roundee-notify-container id="roundee_notify_container" position="top-right" chatsts=showrsidemenu  notests=showrsidemenu}}
+                <div class="sCon">
+                        {{#each viewermembers as |member index|}}
+                            {{video-call/video-viewer id=member.userid confinfo=confinfo viewermembers=viewermembers viewerinfo=member index=index admin=host windowsize=windowsize showrsidemenu=flagshowrsidemenu micOnOff=(action "micOnOff") isfullscreen=isfullscreen requestFullScreen=(action "requestFullScreen") closeFullScreen=(action "closeFullScreen")}}
+                        {{/each}}
+                    {{#if isscreenshare}}
+                        {{video-call/screen-share id="screenShare" confinfo=confinfo viewermembers=viewermembers type=screensharetype startscreenshare=(action "startscreenshare") isfullscreen=isfullscreen requestFullScreen=(action "requestFullScreen") closeFullScreen=(action "closeFullScreen")}}
+                    {{/if}}
+                </div>
+            </div>
+            {{#if flagshowrsidemenu}}
+                {{video-call/rside-menu host=host recon=recon defaulttype=rsideshowtype confinfo=confinfo chatdata=chatdata notesbox=notesdata chatAreaClose=(action "showrsidemenu")}}
+            {{/if}}
+        {{/if}}
+
+    {{/if}}
+    <audio id="audioplayer" autoplay></audio>
+    {{video-call/bottom-menu id="conNav" host=host confinfo=confinfo myinfo=myinfo recon=recon  recordings=recordings showrsidemenu=(action "showrsidemenu") openInvite=(action "openInvite") videoOnOff=(action "videoOnOff") micOnOff=(action "micOnOff") recOnOff=(action "recOnOff") startscreenshare=(action "startscreenshare") setting=(action "setting") leaveRoom=(action "leaveRoom")}}
+{{else}}
+    {{video-call/denied-page}}
+{{/if}}

@@ -1,0 +1,14 @@
+<div class="behindBg"></div>
+<div class="popup_in">
+    <div class="con">
+        <h3>Are you ready to leave the metting?</h3>
+        {{#if checkrecstate}}
+            <div class="txt">A streaming link will be send to your email</div>
+        {{/if}}
+        <div class="btn_block">
+            <span {{action "closePopup" on="click"}}>No, I want to stay</span>
+            <button class="bg1" {{action "leaveRoom" on="click"}}>Yes, leave meeting</button>
+        </div>
+        <div class="close"><button {{action "closePopup" on="click"}}><img src="../img/video/btn_close.svg" alt="close"></button></div>
+    </div>
+</div>

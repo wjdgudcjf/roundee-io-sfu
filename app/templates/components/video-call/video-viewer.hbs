@@ -1,0 +1,41 @@
+{{mstate}}{{resizewindow}}
+{{#if isSafari}}
+    <video id={{viewerinfo.userid}} width="100%" height="100%" autoplay playsinline muted></video>
+{{else}}
+    <video id={{viewerinfo.userid}} width="100%" height="100%" autoplay muted></video>
+{{/if}}
+{{!-- 호스트일때만 추가 태그 생성 --}}
+<div class="hName" >
+    {{#if ismine}}
+        <div {{action "changeDisplayName" on="click"}} class="dsin">
+            <strong>✍️</strong>
+            <strong id="myNameLabel" class="nc">{{viewerinfo.displayname}}</strong>
+            <input id="myNameInput" type="text" value={{viewerinfo.displayname}} title="displayname" style="display:none;">
+        </div>
+    {{else}}
+        <strong class="nc">{{viewerinfo.displayname}}</strong>
+    {{/if}}
+    {{#if host}}
+        <span>(Host)</span>
+    {{/if}}
+</div>
+{{!-- <!-- 카메라 off bg --> --}}
+<div class="cameraBg"></div>
+{{!-- <!-- 사운드 off bg --> --}}
+<div class="soundBg"></div>
+{{!-- <!-- 호스트일때 콘트롤바 --> --}}
+<div class="uNav user">
+    {{#if admin}}
+        {{#unless host}}
+              {{#if audioon}}
+                  <button {{action "micOnOff" "off" on="click"}}><img src="../img/video/sound_on.svg" alt="status"></button>
+              {{else}}
+                  <button {{action "micOnOff" "on" on="click"}}><img src="../img/video/sound_off.svg" class="off" alt="status"></button>
+              {{/if}}
+        {{/unless}}
+    {{/if}}
+    <button {{action "requestFullScreen" on="click"}}><img src="../img/video/icon_full.svg" alt="status"></button>
+</div>
+<div class="uNavClose" >
+    <button {{action "closeFullScreen" on="click"}}>Exit full screen</button>
+</div>

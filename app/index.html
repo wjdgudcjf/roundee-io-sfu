@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Video Call 🤙 | Roundee.io</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Cache-Control" content="no-cache"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0" />
+
+    {{content-for "head"}}
+
+    <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/nhgakmconlchcjjjcligmohaijmgcbkd">
+    <link integrity="" rel="stylesheet" href="{{rootURL}}assets/vendor.css">
+    <link integrity="" rel="stylesheet" href="{{rootURL}}assets/roundee-io-sfu-v1.3.0.css">
+
+    {{content-for "head-footer"}}
+  </head>
+  <body>
+    {{content-for "body"}}
+
+    <script>
+      if(!!window.MSInputMethodContext && !!document.documentMode) {  //IE 11
+            var url = window.location.href;
+            window.location.replace("https://askee.io/browser-not-supported?urlkey=" + url);
+      }
+
+      if(window.location.href.indexOf('sign-in?id=')!==-1) {
+          sessionStorage.setItem('signin', false);
+      } else {
+          if(window.location.href.indexOf('/video-call/')!==-1){
+              if(window.location.href.indexOf('?id=')!==-1) {
+                  sessionStorage.setItem('signin', false);
+              } else {
+                  sessionStorage.setItem('signin', true);
+              }
+          } else {
+              sessionStorage.setItem('signin', true);
+          }
+      }
+
+    </script>
+
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script src="{{rootURL}}assets/vendor.js"></script>
+    <script src="{{rootURL}}assets/roundee-io-sfu-v1.3.0.js"></script>
+
+    {{content-for "body-footer"}}
+  </body>
+</html>
