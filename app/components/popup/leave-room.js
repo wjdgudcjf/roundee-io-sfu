@@ -55,9 +55,10 @@ export default Component.extend({
                     let update_body = {};
                     if(confinfo.get('slack_access_bot_token')) {
                         update_body.send_to_bot_channel = 'Y';
+                        ucEngine.Conf.updateConferenceReserve(GLOBAL_MODULE.getConfID(), update_body);
                     }
-                    update_body.send_recording = GLOBAL.getMyID();
-                    ucEngine.Conf.updateConferenceReserve(GLOBAL_MODULE.getConfID(), update_body);
+                    // update_body.send_recording = GLOBAL.getMyID();
+                    // ucEngine.Conf.updateConferenceReserve(GLOBAL_MODULE.getConfID(), update_body);
                     ucEngine.Conf.exitConferenceRoom(GLOBAL_MODULE.getConfID(), {type: 0});
                     ucEngine.logout();
                     sessionStorage.clear();
