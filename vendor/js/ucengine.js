@@ -8941,34 +8941,13 @@ function ChatEngine(){
                         serverRecord.unreadcnt = meta['.unread'];
 
                         if(cud==='d' ){
-                            // let record = GLOBAL.db.peekRecord('conferenceroom', roomid);
-                            // if(record){
-                            //     GLOBAL.db.unload(record);
-                            // }
                             GLOBAL.db.unloadAll('conferenceroom');
                             GLOBAL.db.unloadAll('member');
                             GLOBAL.db.unloadAll('recording');
                         }
                         else{
                             let members = [];
-                            // for(let i=0, n=serverRecord.members.length; i<n; i++){
-                            //     let memberid = serverRecord.members[i];
-                            //     let email = serverRecord.emails[i];
-                            //     let info = null;
-                            //     for(let j=0, m=serverRecord.cmembers.length; j<m; j++){
-                            //         if(serverRecord.cmembers[j].userid===memberid){
-                            //             info = GLOBAL.clone(serverRecord.cmembers[j]);
-                            //             break;
-                            //         }
-                            //     }
-                            //     if(info!==null){
-                            //         info.email = email;
-                            //     }
-                            //     else{
-                            //         info = {userid: memberid, email: email};
-                            //     }
-                            //     members.push({id: info.userid, type: 'member', attributes:info});
-                            // }
+
                             if(serverRecord.name!==undefined&&serverRecord.name!==null){
                                 GLOBAL.lastreadkey = meta['.keyRW'];
                                 if(serverRecord.cmembers!==undefined){
@@ -9157,7 +9136,6 @@ function ChatEngine(){
                                     }
                                 }
                                 if(e.body[i]['msgType']===CONST.CHAT_TYPE_TEXT||e.body[i]['msgType']===CONST.CHAT_TYPE_IMAGE||e.body[i]['msgType']===CONST.CHAT_TYPE_DOC||e.body[i]['msgType']===CONST.CHAT_TYPE_VIDEO){
-                                    GLOBAL.error(e.body[i]['msgType']);
                                     storedata.push({id: e.body[i]['msgID'], type: 'logmsg', attributes: chatdata});
                                 }
 
@@ -10495,17 +10473,11 @@ function UcEngine( confid ) {
                 if ( roomID !== GLOBAL.getConfID() ) {
                     break;
                 }
+                
+                GLOBAL.lastreadkey = body[ '.meta' ]['.keyRW'];
                 if ( !( unreadcnt === undefined || unreadcnt === null || unreadcnt === '' ) ) {
                     // unreadcnt = 0;
-                    GLOBAL.db.push( {
-                        data: {
-                            id: roomID,
-                            type: 'conferenceroom',
-                            attributes: {
-                                unreadcnt: ( unreadcnt - GLOBAL.removereadcnt )
-                            }
-                        }
-                    } );
+                    GLOBAL.db.push( { data: { id: roomID, type: 'conferenceroom', attributes: { unreadcnt:  unreadcnt }}} );
                 }
 
                 if ( GLOBAL.db ) {

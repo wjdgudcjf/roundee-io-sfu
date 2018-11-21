@@ -28,29 +28,20 @@ export default Component.extend({
         return false;
     }),
 
-    unreadcount: computed('confinfo.unreadcnt', function(){
-        let unreadcnt = this.get('confinfo.unreadcnt');
-        if(unreadcnt<=0 || !unreadcnt){
-            return null;
-        }
+    unreadcount: computed('confinfo.unreadcnt', 'chatdata.[]', function(){
+        //let unreadcnt = this.get('confinfo.unreadcnt');
+        let unreadcnt = 0;
+        // if(unreadcnt<=0 || !unreadcnt){
+        //     return null;
+        // }
 
         let logmsg_info = this.get('store').peekAll('logmsg').toArray();
         if(logmsg_info.length>0) {
-          if(logmsg_info.length===1) {
-              if(logmsg_info[0].get('msgType')!==CONST.CHAT_TYPE_TEXT){
-                  unreadcnt=0;
-              }
-          } else {
-              if(unreadcnt > logmsg_info.length) {
-                  unreadcnt = logmsg_info.length;
-              }
-
-              for(let i=0, n=unreadcnt; i<n; i++){
-                  if(logmsg_info[logmsg_info.length-1-i].get('msgType')!==CONST.CHAT_TYPE_TEXT){
-                      unreadcnt--;
-                  }
-              }
-          }
+            for(let i=0; i< logmsg_info.length; i++){
+                if(logmsg_info[i].get('keyID') > GLOBAL.lastreadkey){
+                    unreadcnt++;
+                }
+            }
         }
         else{
             unreadcnt = 0;
