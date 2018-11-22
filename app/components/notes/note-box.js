@@ -42,25 +42,53 @@ export default Component.extend({
           $("#circle_btn_"+note_id).addClass('imgChange').html('<img src="../img/video/small_idea.svg" alt="">');
         }
 
-        let notemsgarray = notesinfo.get('noteMsg').split('\n');
-        let noteDatatextrea ='';
-        let noteDatadiv ='';
-
-        for(var i=0, n=notemsgarray.length; i<n; i++){
-            let notemsgrow = notemsgarray[i];
-            if(i+1 === notemsgarray.length) {  // last
-              noteDatadiv +=  notemsgrow;
-            } else {
-              noteDatadiv +=  notemsgrow + '<br/>';
-            }
+        if(notesinfo.get('noteMsg')) {
+	        let notemsgarray = notesinfo.get('noteMsg').split('\n');
+	        let noteDatatextrea ='';
+	        let noteDatadiv ='';
+	
+	        for(var i=0, n=notemsgarray.length; i<n; i++){
+	            let notemsgrow = notemsgarray[i];
+	            if(i+1 === notemsgarray.length) {  // last
+	              noteDatadiv +=  notemsgrow;
+	            } else {
+	              noteDatadiv +=  notemsgrow + '<br/>';
+	            }
+	        }
+	
+	        noteDatatextrea +=  notesinfo.get('noteMsg');
+	        set(this, 'noteDatatextrea', noteDatatextrea);
+	        set(this, 'noteDatadiv', noteDatadiv);
+        } 
+		else {
+          set(this, 'noteDatatextrea', notesinfo.get('noteMsg'));
+          set(this, 'noteDatadiv', notesinfo.get('noteMsg'));
         }
 
-        noteDatatextrea +=  notesinfo.get('noteMsg');
-        set(this, 'noteDatatextrea', noteDatatextrea);
-        set(this, 'noteDatadiv', noteDatadiv);
 
-        // $("textarea.autosize").on('keydown keyup', function () {
-        //     let sHeight = $(this).val().length;
+        $("textarea.autosize").on('keydown keyup', function (e) {
+            let thisobject = $('#conform_Save_' + notesinfo.get('id'));
+            let parVal = thisobject.parents('.nl');
+            let textVal = parVal.find('.cmc').html();
+            var textVal1 = parVal.find('.comment').children('textarea').val();
+            if(e.keyCode === 13){
+              textVal1 = textVal1.replace(/\n/g, "<br/>");
+              //console.log('note_id:' + notesinfo.get('id'));
+              thisobject.parent('span').hide();
+              thisobject.parent('span').prev('span').css('display','');
+              parVal.find('.comment').children('.cmc').html(textVal1).show().next('textarea').focusout().hide();
+              parVal.find('.comment').css('background','');
+              ucEngine.Chats.updateMsgItem(GLOBAL_MODULE.getConfID(), this.get('notesinfo.keyID'), {noteType: this.get('notesinfo.noteType'), msgData: textVal1});
+              this.get('store').push({data: {id: notesinfo.get('id'), type: 'notes', attributes: {noteMsg: textVal1}}});
+            }
+
+      	}.bind(this));
+
+
+        // $("textarea.autosize").on('keydown keyup', function (e) {
+        //     let textarea_note = $(this);
+        //     let sHeight = textarea_note[0].scrollHeight;
+        //     //let sHeight = $(this).val().length;
         // 		if(sHeight < 29){
         // 			$(this).css('height','16px');
         // 			$(this).next('button').css('line-height','')
@@ -224,6 +252,24 @@ export default Component.extend({
         thisobject.parent('span').prev('span').show();
         parVal.find('.comment').children('.cmc').show().next('textarea').focusout().hide();
         parVal.find('.comment').css('background','');
+      },
+
+      noteinputdata(idx) {
+        //GLOBAL.error(idx);
+        var textar = $('#textarea_' + idx);
+        let sHeight = textar[0].scrollHeight;
+        //GLOBAL.error(sHeight);
+        if(sHeight < 29){
+          textar.css('height','16px');
+          textar.next('button').css('line-height','')
+        } else if(sHeight > 29 && sHeight <90) {
+          textar.css('height','48px');
+          textar.next('button').css('line-height','70px')
+        } else {
+          textar.css('height','80px');
+          $('.tWrite button').css('line-height','102px')
+        }
+
       },
     }
 });

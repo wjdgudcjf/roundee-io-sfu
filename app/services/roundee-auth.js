@@ -126,7 +126,8 @@ export default Service.extend({
         			let enddate = null;
         			startdate = new Date(Date.parse(nowdate));
         			enddate = new Date(Date.parse(nowdate) + (1000*60*50));
-                    roomID = GLOBAL.genConferenceID();
+                    //roomID = GLOBAL.genConferenceID();
+                    roomID = GLOBAL.getEncData('device.uuid');
 
                     // owner conference create
                     let body = {
@@ -200,15 +201,26 @@ export default Service.extend({
             }
         };
 
+        let onError = function(e){
+            GLOBAL.error("Web Socket Error Code = " + e.code + " name = " + e.message);
+            switch(e.code){
+                case 4001:{
+                    GLOBAL.NotiHandle.send( 'showmessagenoti', 'duplicate', GLOBAL.getMyID() );
+                    // this.invalidate();
+                }
+            }
+        };
+
         let CallBackConnectionFail = onConnectionFail.bind(this);
         let CallBackLogin = onLogin.bind(this);
         let CallBackLoginFail = onLoginFail.bind(this);
         let CallBackLoginProgress = onLoginProgress.bind(this);
         let CallBackLogInSuccess = onLogInSuccess.bind(this);
         let CallBackStartComplete = onStartComplete.bind(this);
+        let CallBackError = onError.bind(this);
 
         ucEngine.start('web_start',{ onConnectionFail:CallBackConnectionFail, onLogin:CallBackLogin, onLoginFail:CallBackLoginFail,
-        onLoginProgress:CallBackLoginProgress, onLogInSuccess:CallBackLogInSuccess, onStartComplete:CallBackStartComplete }, this.get('store'));
+        onLoginProgress:CallBackLoginProgress, onLogInSuccess:CallBackLogInSuccess, onStartComplete:CallBackStartComplete, onError: CallBackError}, this.get('store'));
     },
 
     authenticate(authinfo){
@@ -218,7 +230,13 @@ export default Service.extend({
         GLOBAL.setEncData("server_url", "wss://" + config.APP.engine_server_url + ":7060");
         GLOBAL.setEncData("server.name", config.APP.engine_server_url);
 
-        GLOBAL.setEncData('device.uuid', GLOBAL.createUUID());
+        //GLOBAL.setEncData('device.uuid', GLOBAL.createUUID());
+        if(authinfo.roomid){
+            GLOBAL.setEncData('device.uuid', authinfo.roomid);
+        }
+        else{
+            GLOBAL.setEncData('device.uuid', GLOBAL.genConferenceID());
+        }
         GLOBAL.setEncData("register.response", '');
         GLOBAL.setMyID('');
 

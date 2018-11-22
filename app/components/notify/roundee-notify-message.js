@@ -103,16 +103,15 @@ export default Component.extend({
 
     click(event){
         if(this.get('notification.onClick')){
-            window.location.reload(true);
+            this.get('notification.onClick')();
+            //window.location.reload(true);
         }
     },
 
     actions: {
-
       closenotification() {
         $(".rUser").hide();
         $(".uStop").hide();
-      },
-
+      }
     }
 });

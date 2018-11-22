@@ -33,7 +33,7 @@
                   </button>
             </div>
             <div class="eBox" >
-              <button id="remove_cat_btn_{{notesinfo.id}}" {{action "removecategory" notesinfo.id on="click"}}>No Category</button>
+              <button id="remove_cat_btn_{{notesinfo.id}}" {{action "removecategory" notesinfo.id on="click"}}>Close</button>
           </div>
         </div>
     </div>
@@ -48,12 +48,12 @@
 </div>
 
 <div class="comment">
-    {{#if notesinfo.noteMsg}}
+    {{#if noteDatadiv}}
         <div class="cmc">{{{noteDatadiv}}}</div>
-        <textarea class="autosize" rows='5'>{{{noteDatatextrea}}}</textarea>
+        <textarea id='textarea_{{notesinfo.id}}' class="autosize" {{action "noteinputdata" notesinfo.id on="input"}}>{{{noteDatatextrea}}}</textarea>
     {{else}}
         <div class="cmc">Blank note</div>
-        <textarea class="autosize">Blank note</textarea>
+        <textarea id='textarea_{{notesinfo.id}}' class="autosize" {{action "noteinputdata" notesinfo.id on="input"}}>Blank note</textarea>
     {{/if}}
 </div>
 

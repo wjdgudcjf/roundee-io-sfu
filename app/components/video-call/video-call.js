@@ -452,6 +452,10 @@ export default Component.extend({
                         if(!this.checkScreenShareExtension()){
                             //chrome browser
                             let extensionid = 'nhgakmconlchcjjjcligmohaijmgcbkd';
+
+                            if(config.APP.domain==='https://askee.io'){
+                                extensionid = 'mdjebeajhjimaphcflphoamnhcabbmko';
+                            }
                             let onsuccess = function(){
                                 this.hasExtension = true;
                                 // window.location.reload(true);
@@ -718,7 +722,11 @@ export default Component.extend({
             }
             else if(notitype==='duplicate'){
                 let id = msgID;
-                this.get('notifications').msginfo('Log in Another device', {autoClear: true});
+                this.get('notifications').msginfo('Log in Another device', {autoClear: false, onClick: function(){
+                    this.get('notifications').clearAll();
+                    // this.get('store').unloadAll();
+                    this.get('session').invalidate();
+                }.bind(this)});
             }
         }
     }

@@ -197,7 +197,7 @@ export default Service.extend({
     },
 
     clearAll() {
-        this.get('content').forEach(notification => {
+        this.get('noti_containers').forEach(notification => {
             this.removeNotification(notification);
         });
     },

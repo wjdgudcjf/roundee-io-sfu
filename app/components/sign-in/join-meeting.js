@@ -2,6 +2,7 @@ import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 
 export default Component.extend({
+    store: service('store'),
     router: service(),
     session: service('roundee-auth'),
     tagName: 'div',
@@ -13,8 +14,13 @@ export default Component.extend({
         this._super(...arguments);
         $("#inputuser").on('blur', function(){
             let userid = this.get('userid');
-            if(this.checkemail(userid)){
-                this.set('errorcheck', true);
+            if( $('#inputuser').val().length!=0) {
+                if(this.checkemail(userid)){
+                    this.set('errorcheck', true);
+                }
+                else{
+                    this.set('errorcheck', false);
+                }
             }
             else{
                 this.set('errorcheck', false);
@@ -41,10 +47,18 @@ export default Component.extend({
                 let confinfo = sessionStorage.getItem('roundee_io:confinfo');
                 if(confinfo!==undefined&&confinfo!==null&&confinfo!==''){
                     confinfo = GLOBAL.transStrToObj(confinfo);
-                     confinfo.userid = authinfo.userid;
+                    confinfo.userid = authinfo.userid;
                     authinfo =  confinfo;
                     authinfo.iscreate = false;
                     sessionStorage.removeItem('roundee_io:confinfo');
+                }
+                else{
+                    if(this.get('store').peekAll('conferenceroom').length > 0){
+                        confinfo = {roomid: this.get('store').peekAll('conferenceroom').content[0].id}
+                        confinfo.userid = authinfo.userid;
+                        authinfo =  confinfo;
+                        authinfo.iscreate = false;
+                    }
                 }
                 this.session.authenticate(authinfo).then(function(response){
                     sessionStorage.setItem('roundee_io:auth', GLOBAL.transObjToStr(response));

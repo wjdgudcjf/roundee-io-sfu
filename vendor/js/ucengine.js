@@ -9934,16 +9934,27 @@ function UcEngine( confid ) {
         } );
     };
 
-    ucengine.logout = function ( callback ) {
-        let logoutComplete = function ( e ) {
-            GLOBAL.info( "UC Server Log Out" );
-            ucengine.Register.stop();
-            callback();
-        };
+    ucengine.logout = function (callback) {
+        if(callback && callback.code){
+            switch(callback.code){
+                case 4001:{
+                    // duplicate
 
-        ucEngine.webSocketSend( [ 'logout' ], null, {
-            onComplete: logoutComplete.bind( this )
-        } );
+                }
+                break;
+            }
+        }
+        else{
+            let logoutComplete = function ( e ) {
+                GLOBAL.info( "UC Server Log Out" );
+                ucengine.Register.stop();
+                callback();
+            };
+
+            ucEngine.webSocketSend( [ 'logout' ], null, {
+                onComplete: logoutComplete.bind( this )
+            } );
+        }
     };
 
     ucengine.onOpen = function ( ev ) {
@@ -9963,20 +9974,13 @@ function UcEngine( confid ) {
         GLOBAL.error( "WebSocket Close Code = " + ev.code + " reason = " + ev.reason );
 
         switch ( ev.code ) {
-        case 0:
-            {
+        case 0:{
                 if ( ev.reason !== 'EOF' ) {
                     webSocketReconnect( ev );
                 }
             }
             break;
-        case 400:
-            {
-                // 재연결 필요가 없음.  reason : device removed
-            }
-            break;
-        case 1001:
-            {
+        case 1001:{
                 if ( ev.reason !== 'Stream end encountered' ) {
                     webSocketReconnect( ev );
                 }
@@ -9984,21 +9988,27 @@ function UcEngine( confid ) {
             break;
 
         case 747:
-        case 1003:
-            {
+        case 1003:{
                 webSocketReconnect( ev );
             }
             break;
-        case 4000:
-            {
+        case 4000:{
+            // 재연결 필요가 없음.  reason : device removed
+        }
+        break;
+        case 4001:{
                 if ( GLOBAL.NotiHandle ) {
-                    GLOBAL.NotiHandle.send( 'showmessagenoti', 'duplicate', GLOBAL.getMyID() );
-                    ucEngine.logout();
+                    // GLOBAL.NotiHandle.send( 'showmessagenoti', 'duplicate', GLOBAL.getMyID() );
+                    if(start_param){
+                        if(start_param.onError){
+                            start_param.onError({code: 4001, message: 'duplicate'});
+                        }
+                    }
+                    //ucEngine.logout({code:4001});
                 }
             }
             break;
-        case 8000:
-            {
+        case 8000:{
                 //다중접속 제한 접속 정리당함.
                 GLOBAL.setEncData( 'HA1', '' );GLOBAL.setEncData( 'HA2', '' );
                 ucEngine.onLoginFail( {
@@ -10008,8 +10018,7 @@ function UcEngine( confid ) {
                 } );
             }
             break;
-        case 9000:
-            {
+        case 9000:{
                 //비정상 close. server에서 close한 경우에 해당하며 재접속 하면 안됨.
                 ucEngine.onLoginFail( {
                     type: 'ucserver',
@@ -10018,8 +10027,7 @@ function UcEngine( confid ) {
                 } );
             }
             break;
-        default:
-            {
+        default:{
                 webSocketReconnect( ev );
             }
             break;
@@ -10473,7 +10481,7 @@ function UcEngine( confid ) {
                 if ( roomID !== GLOBAL.getConfID() ) {
                     break;
                 }
-                
+
                 GLOBAL.lastreadkey = body[ '.meta' ]['.keyRW'];
                 if ( !( unreadcnt === undefined || unreadcnt === null || unreadcnt === '' ) ) {
                     // unreadcnt = 0;

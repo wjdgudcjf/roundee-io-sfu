@@ -1,8 +1,10 @@
 import { bind } from '@ember/runloop';
 import { computed } from '@ember/object';
+import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 
 export default Component.extend({
+    session: service('roundee-auth'),
     tagName: 'div',
     classNames: ['lb'],
 
@@ -254,7 +256,11 @@ export default Component.extend({
     },
 
     didDestroyElement() {
-        ucEngine.Video.removeViewer({viewerid: this.get('viewerinfo.userid')});
+        if(this.get('session').isAuthenticated){
+            if(this.get('viewerinfo.userid')!==GLOBAL.getMyID()){
+                ucEngine.Video.removeViewer({viewerid: this.get('viewerinfo.userid')});
+            }
+        }
         this._super(...arguments);
     },
 

@@ -16,8 +16,13 @@ export default Controller.extend({
             if(!this.get('session.isAuthenticated')){
                 GLOBAL.error("transition to sign-in");
                 this.transitionToRoute('sign-in.index');
+                return false;
             }
-            return true;
+            else{
+                ucEngine.Video.checkDevice({getDevice: this.getDeviceList.bind(this), getDeviceFail: this.getDeviceFail.bind(this)});
+                navigator.mediaDevices.ondevicechange = this.mediadevicechange.bind(this);
+                return true;
+            }
         }
         return false;
     }),
@@ -152,8 +157,5 @@ export default Controller.extend({
         this._super(...arguments);
         this.videodevicelist = [];
         this.audiodevicelist = [];
-
-        ucEngine.Video.checkDevice({getDevice: this.getDeviceList.bind(this), getDeviceFail: this.getDeviceFail.bind(this)});
-        navigator.mediaDevices.ondevicechange = this.mediadevicechange.bind(this);
     },
 });
