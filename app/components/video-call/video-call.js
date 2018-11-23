@@ -171,33 +171,39 @@ export default Component.extend({
     onFailStartConference(error){
         // can't start video conference
         GLOBAL.error("Start Conference Fail  name =  " + error.name + " message = " + error.message);
-        if (error.name=="NotFoundError" || error.name == "DevicesNotFoundError" ){
+        if(error.name==='AbortError'){
 
+        }
+        else if(error.name==='NotAllowedError'){
+
+        }
+        else if(error.name==='NotFoundError'){
+
+        }
+        else if(error.name==='NotReadableError'){
+
+        }
+        else{
+
+        }
+
+        if (error.name=="NotFoundError" || error.name == "DevicesNotFoundError" ){
+            this.set('checksuccess', false);
         }
         else if (error.name=="NotReadableError" || error.name == "TrackStartError" ){
             this.set('checksuccess', false);
-            // if(error.message.indexOf('video')!==-1){
-            //     this.get('store').push({data:{id: GLOBAL.getMyID(), type: 'member', attributes:{devicestatus: 'audioonly', mstate: 'audioonly'}}});
-            //     ucEngine.Conf.updateConferenceUser(GLOBAL_MOUDLE.getConfID(), {devicestatus: 'audioonly', mstate: 'audioonly'}, {onComplete: function(){
-            //         ucEngine.Video.startConference({type: 'main', devicetype: config.APP.devicetype, devicestatus: 'audioonly', videodeviceid: null, audiodeviceid: selectdevice.audio, facingMode: "user", onSuccess: this.onSuccessStartConference.bind(this), onFail: this.onFailStartConference.bind(this)});
-            //     }});
-            //     // ucEngine.Video.startConference({type: 'main', devicetype: config.APP.devicetype, devicestatus: 'audioonly', videodeviceid: null, audiodeviceid: selectdevice.audio, facingMode: "user", onSuccess: this.onSuccessStartConference.bind(this), onFail: this.onFailStartConference.bind(this)});
-            // }
-            // else{
-            //     this.set('checksuccess', false);
-            // }
         }
         else if (error.name=="OverconstrainedError" || error.name == "ConstraintNotSatisfiedError" ){
-
+            this.set('checksuccess', false);
         }
         else if (error.name=="NotAllowedError" || error.name == "PermissionDeniedError" ){
             this.set('checksuccess', false);
         }
         else if (error.name=="TypeError" || error.name == "TypeError" ){
-
+            this.set('checksuccess', false);
         }
         else {
-
+            this.set('checksuccess', false);
         }
     },
 

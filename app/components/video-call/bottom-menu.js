@@ -16,11 +16,6 @@ export default Component.extend({
 
     show5minnoti: false,
 
-    // labelRecordingMsg: null,
-    // //labelPresent: 'You can not start screen share while the other participant is sharing.',
-    // labelPresent: 'Currently in use.',
-    // labelSafariPresent: 'Not supported in Safari.',
-
     issafari: computed(function(){
         if(adapter.browserDetails.browser==='safari'){
             return true;
@@ -169,7 +164,12 @@ export default Component.extend({
                     clearInterval(rectimer);
                 }
                 this.set('totalrecordingtime', recordingtime);
-                this.set('rectime', min.zf(2) + ":" + sec.zf(2));
+                if(hour < 1){
+                    this.set('rectime', min.zf(2) + ":" + sec.zf(2));
+                }
+                else{
+                    this.set('rectime','60:00');
+                }
             }
         }
     }),
@@ -235,10 +235,11 @@ export default Component.extend({
             let hour = parseInt(processingTime/3600);
             let min = parseInt((processingTime - hour*3600)/60);
             let sec = parseInt(processingTime - hour*3600 - min*60);
-            if(hour > 0){
+            if(hour >= 1){
                 // stop recording.
                 // Reached the maximum 60 min notification
                 this.get('notifications').recstopinfo('You have reached the maximum of 60 min free recording time per meeting.', {title:"Recording stopped", autoClear: false});
+                this.set('rectime','60:00');
                 this.get('recOnOff')();
             }
             else{
@@ -249,8 +250,9 @@ export default Component.extend({
                         this.set('show5minnoti', true);
                     }
                 }
+                this.set('rectime', min.zf(2) + ":" + sec.zf(2));
             }
-            this.set('rectime', min.zf(2) + ":" + sec.zf(2));
+            // this.set('rectime', min.zf(2) + ":" + sec.zf(2));
         }.bind(this), 1000);
         this.set('rectimer', timer);
     },

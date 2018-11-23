@@ -96,8 +96,16 @@ export default Component.extend({
 
             if(this.videodevicelist.length===0){
                 $("#cameraselect").addClass('disable');
+                $("#videoquality").addClass('disable');
+                $('input[name="video"]').prop('disabled', true);
                 this.set('selectvideodevice', 'No Camera Detected.');
             }
+            // else{
+            //     if($("#cameraselect").hasClass('disable')){
+            //         $("#cameraselect").removeClass('disable');
+            //     }
+            //     $('input[name="video"]').prop('disabled', true);
+            // }
         }
         ucEngine.Video.getLocalMedia({devicetype: config.APP.devicetype, devicestatus: this.get('myinfo.devicestatus'), videodeviceid: this.selectvideodeviceidl, audiodeviceid:this.selectmicdeviceid}, this.getLocalStream.bind(this), this.getLocalStreamFail.bind(this));
     },
@@ -213,7 +221,7 @@ export default Component.extend({
                 $("#miclist").addClass('select-hide')
             }
         }
-        event.preventDefault();
+        // event.preventDefault();
     },
 
     actions: {

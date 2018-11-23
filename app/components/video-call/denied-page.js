@@ -14,11 +14,14 @@ export default Component.extend({
     browserchecking: computed(function(){
         if(config.APP.browsertype==='chrome') {
           this.set('ischrome', true);
-        } else if(config.APP.browsertype==='opera') {
+        }
+        else if(config.APP.browsertype==='opera') {
           this.set('isopera', true);
-        } else if(config.APP.browsertype==='firefox') {
+        }
+        else if(config.APP.browsertype==='firefox') {
           this.set('isfirefox', true);
-        } else if(config.APP.browsertype==='safari') {
+        }
+        else if(config.APP.browsertype==='safari') {
           this.set('issafari', true);
         }
     }),

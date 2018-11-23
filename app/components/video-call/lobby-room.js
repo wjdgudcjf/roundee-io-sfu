@@ -188,6 +188,7 @@ export default Component.extend({
 
     didInsertElement() {
         this._super(...arguments);
+        this.set('displayname', this.get('myinfo.displayname'));
         ucEngine.Video.checkDevice({getDevice: this.getDeviceList.bind(this), getDeviceFail: this.getDeviceFail.bind(this)});
     },
 
