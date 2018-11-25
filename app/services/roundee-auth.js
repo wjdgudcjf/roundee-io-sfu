@@ -131,20 +131,20 @@ export default Service.extend({
 
                     // owner conference create
                     let body = {
-                              name: GLOBAL.getMyName() + '\'s meeting',
-                              desc: 'add a description',
-                              type: 0,                                    // 0: instance, 1: create, 2: etc
-                              password: "",
-                              start_time: startdate.toISOString(),
-                              end_time:  enddate.toISOString(),
-                              time_offset: tzoffsetstring,
-                              time_zone: tzname,
-                              state: 'scheduled',
-                              device: 'PC_' + config.APP.browsertype,
-                              owner: authinfo.userid,
-                              members: [authinfo.userid],
-                              emails: [authinfo.userid],
-                              cmembers: [{userid: GLOBAL.getMyID(), displayname: GLOBAL.getMyName(), quality: 'high', mstate: 'all'}]
+                          name: GLOBAL.getMyName() + '\'s meeting',
+                          desc: 'add a description',
+                          type: 0,                                    // 0: instance, 1: create, 2: etc
+                          password: "",
+                          start_time: startdate.toISOString(),
+                          end_time:  enddate.toISOString(),
+                          time_offset: tzoffsetstring,
+                          time_zone: tzname,
+                          state: 'scheduled',
+                          device: 'PC_' + config.APP.browsertype,
+                          owner: authinfo.userid,
+                          members: [authinfo.userid],
+                          emails: [authinfo.userid],
+                          cmembers: [{userid: GLOBAL.getMyID(), displayname: GLOBAL.getMyName(), quality: 'high', mstate: 'all'}]
                     };
 
                     this.get('store').push({data:{id: roomID, type: 'conferenceroom', attributes: {
@@ -178,7 +178,21 @@ export default Service.extend({
                         }.bind(this));
                     }
 
-                    ucEngine.Conf.newConferenceReserve(roomID, body, {onComplete:conferenceCreateComplete.bind(this)});
+                    ucEngine.Conf.newConferenceReserve(roomID, body, {onComplete:conferenceCreateComplete.bind(this), onError: function(e){
+                        switch(e.code){
+                            case 404:{
+                                window.location.replace(config.APP.domain + "/room_no_exist");
+                            }
+                            break;
+                            case 410:{
+                                window.location.replace(config.APP.domain + "/410page.html");
+                            }
+                            break;
+                            default:{
+                                window.location.replace(config.APP.domain + "/410page.html");
+                            }
+                        }
+                    }});
                 }
             }
             else if(type==='restore'){
@@ -205,6 +219,7 @@ export default Service.extend({
             GLOBAL.error("Web Socket Error Code = " + e.code + " name = " + e.message);
             switch(e.code){
                 case 4001:{
+                    sessionStorage.setItem('duplicate', true);
                     GLOBAL.NotiHandle.send( 'showmessagenoti', 'duplicate', GLOBAL.getMyID() );
                     // this.invalidate();
                 }

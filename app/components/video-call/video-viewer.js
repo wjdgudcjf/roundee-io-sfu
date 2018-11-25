@@ -96,6 +96,25 @@ export default Component.extend({
 
     onFailGetViewer(error){
         GLOBAL.error('Get Viewer Fail ['+this.get('viewerinfo.userid')+'] = ' + error.message);
+        if(error.name==='iceconnecterror'){
+            if(error.type==='main'){
+
+            }
+            else if(error.type==='viewer'){
+                if(this.get('viewerinfo.userid')!==GLOBAL.getMyID()){
+                    ucEngine.Video.removeViewer({viewerid: this.get('viewerinfo.userid')});
+                    // get viewer media
+                    this.getViewerVideo();
+                }
+            }
+            else if(error.type==='self'){
+
+            }
+        }
+    },
+
+    getViewerVideo(){
+        ucEngine.Video.getViewer({type: 'viewer', viewerid: this.get('viewerinfo.userid'), devicetype: this.get('viewerinfo.devicetype'), onSuccess: this.onSuccessGetViewer.bind(this), onFail: this.onFailGetViewer.bind(this)});
     },
 
     loadedvideostream(event){
@@ -198,6 +217,7 @@ export default Component.extend({
 
     didInsertElement() {
         this._super(...arguments);
+        $("#loader").addClass('hide');
         if(this.get('viewerinfo.userid')===GLOBAL.getMyID()){
             // local media display
             if(this.get('viewerinfo.devicestatus')==='all'||this.get('viewerinfo.devicestatus')==='videoonly'){
@@ -211,7 +231,8 @@ export default Component.extend({
         }
         else{
             // get viewer media
-            ucEngine.Video.getViewer({type: 'viewer', viewerid: this.get('viewerinfo.userid'), devicetype: this.get('viewerinfo.devicetype'), onSuccess: this.onSuccessGetViewer.bind(this), onFail: this.onFailGetViewer.bind(this)});
+            this.getViewerVideo();
+            // ucEngine.Video.getViewer({type: 'viewer', viewerid: this.get('viewerinfo.userid'), devicetype: this.get('viewerinfo.devicetype'), onSuccess: this.onSuccessGetViewer.bind(this), onFail: this.onFailGetViewer.bind(this)});
         }
 
         this.repositionvideobox();
@@ -255,11 +276,15 @@ export default Component.extend({
         videodom.onloadeddata = this.loadedvideostream.bind(this);
     },
 
-    didDestroyElement() {
+    willDestroyElement() {
         if(this.get('session').isAuthenticated){
             if(this.get('viewerinfo.userid')!==GLOBAL.getMyID()){
                 ucEngine.Video.removeViewer({viewerid: this.get('viewerinfo.userid')});
             }
+        }
+
+        if(this.get('isfullscreen')){
+            this.get('closeFullScreen')();
         }
         this._super(...arguments);
     },

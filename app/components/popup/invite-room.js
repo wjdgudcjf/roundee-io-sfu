@@ -213,12 +213,18 @@ export default Component.extend({
 
                 //sending email
                 ucEngine.Conf.inviteConferenceRoom(GLOBAL_MODULE.getConfID(), body, {onComplete:conferenceInviteComplete.bind(this), onError: function(e){
-                    let responsecode = e.header[1];
-                    if(responsecode==='404'){
-
-                    }
-                    else if(responsecode==='410'){
-
+                    switch(e.code){
+                        case 404:{
+                            window.location.replace(config.APP.domain + "/room_no_exist");
+                        }
+                        break;
+                        case 410:{
+                            window.location.replace(config.APP.domain + "/410page.html");
+                        }
+                        break;
+                        default:{
+                            window.location.replace(config.APP.domain + "/410page.html");
+                        }
                     }
                 }.bind(this) });
             }

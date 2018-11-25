@@ -9436,54 +9436,7 @@ function ConferenceEngine(confid){
                 switch(responseCmd){
                     case 200:{
                         let comType = e.requestParam.header[1][1][0];
-                        if(comType=='create'){
-                        }
-                        else if(comType=='update'){
-                            let body = e.requestParam.body;
-                            let confID = e.requestParam.header[1][1][1];
-
-                            // let updatebody = {
-                            //     roomid:confID,
-                            //     title: body.name_t,
-                            //     description: body.desc_t,
-                            //     start_time: body['tm.start_dt'],
-                            //     end_time: body['tm.end_dt'],
-                            //     timezone: body['tm.z.name_s'],
-                            //     tz: body['tm.z.val_s'],
-                            //     state: body['state_s'],
-                            //     use_recording_b: body['use_recording_b'],
-                            //     use_transcript_b: body['use_transcript_b'],
-                            //     transcript_language_s: body['transcript_language_s']
-                            // };
-                            //
-                            // if(body.agenda_s!==undefined && typeof body.agenda_s==="string" && body.agenda_s!==""){
-                            //     updatebody.agenda_s = GLOBAL.transStrToObj(body.agenda_s);
-                            // }
-                            //
-                            // if(body.screenshare_b!==undefined && body.screenshare_b!==null){
-                            //     updatebody.screenshare_b = body.screenshare_b;
-                            // }
-                            //
-                            // if(body.extendedcnt_i!==undefined && body.extendedcnt_i!==null){
-                            //     updatebody.extendedcnt = body.extendedcnt_i;
-                            // }
-                            //
-                            // if(body['tm.update_dt']!==undefined && body['tm.update_dt']!==null){
-                            //     updatebody.update_time = body['tm.update_dt'];
-                            // }
-                            //
-                            // Ti.Database.store.push({data:{id:confID, type:"schedule", attributes:updatebody}});
-                        }
-                        else if(comType=='delete'){
-                        }
-                        else if(comType=='invite'){
-                        }
-                        else if(comType=='join'){
-                        }
-                        else if(comType==='offer'){
-                        }
-                        else if(comType==='scan'){
-                            //for getting chatdata from msg.com
+                        if(comType==='scan'){
                             let storedata = [];
                             for(let i=0, n=e.body.length ; i<n ; i++){
                                 if(e.body[i]['msgType']===CONST.CHAT_TYPE_TEXT){
@@ -9498,16 +9451,31 @@ function ConferenceEngine(confid){
                                         msgDateTime: e.body[i]['msgDateTime'],
                                         msgType: e.body[i]['msgType'],
                                         msgData: e.body[i]['msgData'],
-                                        //recordmsg: e.body[i]['recordmsg'],
-                                        recordtimer: e.body[i]['recordtimer'],
+                                        recordtimer: e.body[i]['recordtimer']
                                     }});
                                 }
                             }
                             if(storedata.length>0){
                                 GLOBAL.db.push({data:storedata});
                             }
-                            //GLOBAL.debug(JSON.stringify(storedata));
                         }
+                        else{
+
+                        }
+                        // if(comType=='create'){
+                        // }
+                        // else if(comType=='update'){
+                        // }
+                        // else if(comType=='delete'){
+                        // }
+                        // else if(comType=='invite'){
+                        // }
+                        // else if(comType=='join'){
+                        // }
+                        // else if(comType==='offer'){
+                        // }
+                        // else if(comType==='scan'){
+                        // }
 
                         if(e.requestParam.onComplete!==undefined){
                             e.requestParam.onComplete(e);
@@ -9517,76 +9485,77 @@ function ConferenceEngine(confid){
                     break;
                     case 403:{
                         let comType = e.requestParam.header[1][1][0];
+                        let confid = e.requestParam.header[1][1][1];
                         GLOBAL.error("Conf Error Response = 403 command = " + comType);
                         if(comType=='join'){
                             if(e.requestParam.onComplete!==undefined){
                                 e.requestParam.onComplete(e);
                             }
-                       }
-                       return false;
+                        }
+                        else{
+                            if(e.requestParam.onError!==undefined){
+                                e.requestParam.onError({command: comType, code: responseCmd, roomid: confid});
+                            }
+                        }
+                        return false;
                     }
                     break;
                     case 404:{
                         let comType = e.requestParam.header[1][1][0];
-                        GLOBAL.error("Conf Error Response = 404 command = " + comType);
                         let confid = e.requestParam.header[1][1][1];
-                        GLOBAL.db.push({data: {id: confid, type: 'conferenceroom', attributes: {state: 'end'}}});
-                       //  if(comType==='offer'){
-                       //      // Conference status is ended.
-                       //      let confid = e.requestParam.header[1][1][1];
-                       //      let body = {
-                       //              state: 'end'
-                       //      };
-                       //      //
-                       //      // this.updateConferenceReserve(confid, body);
-                       //      GLOBAL.db.push({data: {id: confid, type: 'conferenceroom', attributes: body}});
-                       // }
-                       // else{
-                       //     if(e.requestParam.onComplete!==undefined){
-                       //         e.requestParam.onComplete(e);
-                       //     }
-                       // }
-                       if(e.requestParam.onError!==undefined){
-                           e.requestParam.onError(e);
-                       }
-                       return false;
+                        GLOBAL.error("Conf Error Response = 404 command = " + comType);
+                        // GLOBAL.db.push({data: {id: confid, type: 'conferenceroom', attributes: {state: 'end'}}});
+                        if(e.requestParam.onError!==undefined){
+                            e.requestParam.onError({command: comType, code: responseCmd, roomid: confid});
+                        }
+                        return false;
                     }
                     break;
                     case 202:{
                         let comType = e.requestParam.header[1][1][0];
-                        GLOBAL.error("Conf Error Response = 403 command = " + comType);
+                        let confid = e.requestParam.header[1][1][1];
+                        GLOBAL.error("Conf Error Response = 202 command = " + comType);
+                        if(e.requestParam.onError!==undefined){
+                            e.requestParam.onError({command: comType, code: responseCmd, roomid: confid});
+                        }
                         return false;
                     }
                     break;
                     default:{
-                        // Error 처리에 대한 Popup을 보여 주어야 함.
+                        // other error handler
                         let comType = e.requestParam.header[1][1][0];
-                        if(comType=='create'){
-                            //alert(LOCALE.alert.failCreateConfRoom + 'Server Error Code : [' + responseCmd +']');
-                            sessionStorage.clear();
-                            window.location.replace('https://www.roundee.io/410page.html');
+                        let confid = e.requestParam.header[1][1][1];
+                        if(e.requestParam.onError!==undefined){
+                            e.requestParam.onError({command: comType, code: responseCmd, roomid: confid});
                         }
-                        else if(comType=='update'){
-                            //alert(LOCALE.alert.failEditConfRoom + 'Server Error Code : [' + responseCmd +']');
-                            sessionStorage.clear();
-                            window.location.replace('https://www.roundee.io/410page.html');
-                        }
-                        else if(comType=='delete'){
-                            //alert(LOCALE.alert.failDeleteConfRoom + 'Server Error Code : [' + responseCmd +']');
-                            sessionStorage.clear();
-                            window.location.replace('https://www.roundee.io/410page.html');
-                        }
-                        else if(comType=='invite'){
-                            //alert(LOCALE.alert.failDeleteConfRoom + 'Server Error Code : [' + responseCmd +']');
-                            sessionStorage.clear();
-                            window.location.replace('https://www.roundee.io/410page.html');
-                        }
-                        else if(comType==='offer'){
-                            if(e.requestParam.onError!==undefined){
-                                e.requestParam.onError(e);
-                            }
-                        }
-                        return true;
+                        // // Error 처리에 대한 Popup을 보여 주어야 함.
+                        // let comType = e.requestParam.header[1][1][0];
+                        // if(comType=='create'){
+                        //     //alert(LOCALE.alert.failCreateConfRoom + 'Server Error Code : [' + responseCmd +']');
+                        //     sessionStorage.clear();
+                        //     window.location.replace('https://www.roundee.io/410page.html');
+                        // }
+                        // else if(comType=='update'){
+                        //     //alert(LOCALE.alert.failEditConfRoom + 'Server Error Code : [' + responseCmd +']');
+                        //     sessionStorage.clear();
+                        //     window.location.replace('https://www.roundee.io/410page.html');
+                        // }
+                        // else if(comType=='delete'){
+                        //     //alert(LOCALE.alert.failDeleteConfRoom + 'Server Error Code : [' + responseCmd +']');
+                        //     sessionStorage.clear();
+                        //     window.location.replace('https://www.roundee.io/410page.html');
+                        // }
+                        // else if(comType=='invite'){
+                        //     //alert(LOCALE.alert.failDeleteConfRoom + 'Server Error Code : [' + responseCmd +']');
+                        //     sessionStorage.clear();
+                        //     window.location.replace('https://www.roundee.io/410page.html');
+                        // }
+                        // else if(comType==='offer'){
+                        //     if(e.requestParam.onError!==undefined){
+                        //         e.requestParam.onError(e);
+                        //     }
+                        // }
+                        return false;
                     }
                     break;
                 }
@@ -11123,7 +11092,7 @@ function VideoCallEngine(){
                             sdp:offer.sdp
                         };
 
-                        ucEngine.Conf.sendOffer(GLOBAL_MODULE.getConfID(),  body, {onComplete: receiveAnswer, offerType: param.type, param:param});
+                        ucEngine.Conf.sendOffer(GLOBAL_MODULE.getConfID(),  body, {onComplete: receiveAnswer, offerType: param.type, param:param, onError: param.onFail});
                     }.bind(this)).catch(function(error){
                         GLOBAL.error("Create Offer Error = ["+ error.message===""?error.name:error.message+"]");
                         if(param.onFail){
@@ -11150,7 +11119,7 @@ function VideoCallEngine(){
                             sdp:offer.sdp
                         };
 
-                        ucEngine.Conf.sendOffer(GLOBAL_MODULE.getConfID(),  body, {onComplete: receiveAnswer, offerType: param.type, param:param});
+                        ucEngine.Conf.sendOffer(GLOBAL_MODULE.getConfID(),  body, {onComplete: receiveAnswer, offerType: param.type, param:param, onError: param.onFail});
                     }.bind(this)).catch(function(error){
                         GLOBAL.error("Create Offer Error = ["+ error.message===""?error.name:error.message+"]");
                         if(param.onFail){
@@ -11176,10 +11145,10 @@ function VideoCallEngine(){
                             type: 2,
                             sdp:offer.sdp
                         };
-                        ucEngine.Conf.sendOffer(GLOBAL_MODULE.getConfID(), body, {onComplete: receiveAnswer, offerType: param.type, param:param});
+                        ucEngine.Conf.sendOffer(GLOBAL_MODULE.getConfID(), body, {onComplete: receiveAnswer, offerType: param.type, param:param, onError: param.onFail});
                     }.bind(this)).catch(function(error){
-                        if(this.screensharesession.param.onError){
-                            this.screensharesession.param.onError(error);
+                        if(param.onFail){
+                            param.onFail(error);
                         }
                     }.bind(this));
                 }
@@ -11199,7 +11168,7 @@ function VideoCallEngine(){
                                 sdp:offer.sdp
                             };
 
-                            ucEngine.Conf.sendOffer(GLOBAL_MODULE.getConfID(),  body, {onComplete: receiveAnswer, offerType: param.type, param:param});
+                            ucEngine.Conf.sendOffer(GLOBAL_MODULE.getConfID(),  body, {onComplete: receiveAnswer, offerType: param.type, param:param, onError: param.onFail});
                         }.bind(this)).catch(function(error){
                             GLOBAL.error("Create Offer Error = ["+ error.message===""?error.name:error.message+"]");
                             if(param.onFail){
@@ -11224,7 +11193,7 @@ function VideoCallEngine(){
                                 sdp:offer.sdp
                             };
 
-                            ucEngine.Conf.sendOffer(GLOBAL_MODULE.getConfID(),  body, {onComplete: receiveAnswer, offerType: param.type, param:param});
+                            ucEngine.Conf.sendOffer(GLOBAL_MODULE.getConfID(),  body, {onComplete: receiveAnswer, offerType: param.type, param:param, onError: param.onFail});
                         }.bind(this)).catch(function(error){
                             GLOBAL.error("Create Offer Error = ["+ error.message===""?error.name:error.message+"]");
                             if(param.onFail){
@@ -11253,7 +11222,7 @@ function VideoCallEngine(){
                             sdp:offer.sdp
                         };
 
-                        ucEngine.Conf.sendOffer(GLOBAL_MODULE.getConfID(),  body, {onComplete: receiveAnswer, offerType: 'viewer', param:param});
+                        ucEngine.Conf.sendOffer(GLOBAL_MODULE.getConfID(),  body, {onComplete: receiveAnswer, offerType: 'viewer', param:param, onError: param.onFail});
                     }.bind(this)).catch(function(error){
                         GLOBAL.error("Create Offer Error = ["+ error.message===""?error.name:error.message+"]");
                         if(param.onFail){
@@ -11286,7 +11255,7 @@ function VideoCallEngine(){
                             sdp:offer.sdp
                         };
 
-                        ucEngine.Conf.sendOffer(GLOBAL_MODULE.getConfID(),  body, {onComplete: receiveAnswer, offerType: 'viewer', param:param});
+                        ucEngine.Conf.sendOffer(GLOBAL_MODULE.getConfID(),  body, {onComplete: receiveAnswer, offerType: 'viewer', param:param, onError: param.onFail});
                     }.bind(this)).catch(function(error){
                         GLOBAL.error("Create Offer Error = ["+ error.message===""?error.name:error.message+"]");
                         if(param.onFail){
@@ -11392,29 +11361,23 @@ function VideoCallEngine(){
                     }
                 }.bind(this), function(error){
                     /* handle the error */
-                    if (error.name=="NotFoundError" || error.name == "DevicesNotFoundError" ){
-                        //required track is missing
-                        GLOBAL.error("Get Device Fail = " + error.name);
+                    GLOBAL.error("Get Device Fail  error name =  [" + error.name + "] error message = [" + error.message +"]");
+                    if(error.name==='AbortError'){
+
                     }
-                    else if (error.name=="NotReadableError" || error.name == "TrackStartError" ){
-                        GLOBAL.error("Get Device Fail = " + error.name);
+                    else if(error.name==='NotAllowedError'){
+
                     }
-                    else if (error.name=="OverconstrainedError" || error.name == "ConstraintNotSatisfiedError" ){
-                        //constraints can not be satisfied by avb. devices
-                        GLOBAL.error("Get Device Fail = " + error.name + " constrains = " + error.constraints);
+                    else if(error.name==='NotFoundError'){
+
                     }
-                    else if (error.name=="NotAllowedError" || error.name == "PermissionDeniedError" ){
-                        //permission denied in browser
-                        GLOBAL.error("Get Device Fail = " + error.name);
+                    else if(error.name==='NotReadableError'){
+
                     }
-                    else if (error.name=="TypeError" || error.name == "TypeError" ){
-                        //empty constraints object
-                        GLOBAL.error("Get Device Fail = " + error.name + " constrains = " + error.constraints);
+                    else{
+
                     }
-                    else {
-                        //other errors
-                        GLOBAL.error("Get Device Fail = " + error.name);
-                    }
+
                     if(param.onFail){
                         param.onFail(error);
                     }
@@ -11423,6 +11386,19 @@ function VideoCallEngine(){
             else{
                 createOffer(param);
             }
+        }
+    };
+
+    this.stopConference = function(param){
+        if(this.mainsession){
+            this.mainsession.getSenders().forEach(function(mediasource){
+                if(mediasource.track){
+                    mediasource.track.stop();
+                }
+            });
+
+            this.mainsession.close();
+            this.mainsession = null;
         }
     };
 
@@ -11502,7 +11478,23 @@ function VideoCallEngine(){
     };
 
     let iceConnectionState = function(event){
-
+        if (event.target.iceGatheringState === 'complete') {
+            if (event.target.iceConnectionState === 'disconnected' || event.target.iceGatheringState === 'failed') {
+                GLOBAL.info("main iceconnection closed = ["+ event.target.iceConnectionState +"] ["+ event.target.iceGatheringState +"]");
+                if(event.target.param.onFail){
+                    event.target.param.onFail({name: 'iceconnecterror', message: event.target.iceConnectionState, type: event.target.param.type});
+                }
+                // let myinfo = this.get('store').peekRecord('member', GLOBAL.getMyID());
+                // if(myinfo.get('state')!=='exit'){
+                //     let pc = GLOBAL.getPeerconnection();
+                //     if(pc){
+                //         pc.close();
+                //         pc = null;
+                //     }
+                //     this.startMainSession(this.get('peerIM'));
+                // }
+            }
+        }
     };
 
     let pcOnNegotiationNeeded = function(event){

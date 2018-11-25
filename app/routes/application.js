@@ -40,15 +40,15 @@ export default Route.extend({
                 }
             }
             transition.abort();
-
-            if(transition.queryParams.integrationname==='slack') {
+            if(!navigator.mediaDevices){
                 if(config.APP.devicetype === 'iphone') {
                     let url =  mobileurl;
                     window.location.replace(config.APP.domain + "/browser-not-supported-slack?urlkey=" + url);
-                    return;
                 }
             }
-            window.location.replace(mobileurl);
+            else{
+                window.location.replace(mobileurl);
+            }
         }
         else{
             // browser check
@@ -94,8 +94,15 @@ export default Route.extend({
                         }
                     }
                     else{
-                        this.set('session.accessToken', sessioninfo);
-                        this.session.restore(sessioninfo);
+                        let duplicate = sessionStorage.getItem('duplicate');
+                        if(duplicate){
+                            sessionStorage.removeItem('duplicate');
+                            this.set('session.accessToken', sessioninfo);
+                            this.session.restore(sessioninfo);
+                        }
+                        else{
+                            this.session.invalidate();
+                        }
                     }
                 }
 

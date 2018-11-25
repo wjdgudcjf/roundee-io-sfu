@@ -30,7 +30,7 @@ export default Component.extend({
             }
             else{
                 //this.getScreenMedia(event.data.sourceId)
-                ucEngine.Video.startScreenShare({type:'screenshare', mode: 'owner', mediasourceId:event.data.sourceId, onSuccess: this.screenShareSuccess.bind(this)});
+                ucEngine.Video.startScreenShare({type:'screenshare', mode: 'owner', mediasourceId:event.data.sourceId, onSuccess: this.screenShareSuccess.bind(this), onFail: this.screenShareFail.bind(this)});
             }
         }
         else if(event.data.type==='roundeeForSlackGetScreenPending'){
@@ -49,6 +49,28 @@ export default Component.extend({
         }
     },
 
+    screenShareFail(error){
+        if(error.code){
+            // signal error
+            switch(error.code){
+                case 404:{
+                    window.location.replace(config.APP.domain + "/room_no_exist");
+                }
+                break;
+                case 410:{
+                    window.location.replace(config.APP.domain + "/410page.html");
+                }
+                break;
+                default:{
+                    window.location.replace(config.APP.domain + "/410page.html");
+                }
+            }
+        }
+        else{
+            GLOBAL.error("Screen Share Fail  error name = " + error.name + " message = " + error.message);
+        }
+    },
+
     didInsertElement() {
         this._super(...arguments);
         if(!$(".sCon").hasClass("Sharescreen")){
@@ -64,7 +86,7 @@ export default Component.extend({
                     window.addEventListener('message', this.recvExtensionMessage.bind(this));
                 }
                 else{
-                    ucEngine.Video.startScreenShare({type:'screenshare', mode: 'owner', onSuccess: this.screenShareSuccess.bind(this)});
+                    ucEngine.Video.startScreenShare({type:'screenshare', mode: 'owner', onSuccess: this.screenShareSuccess.bind(this), onFail: this.screenShareFail.bind(this)});
                 }
             }
             else{
@@ -75,20 +97,29 @@ export default Component.extend({
         }
         else{
             // this.screenshareViewer();
-            ucEngine.Video.startScreenShare({type:'screenshare', mode: 'viewer', onSuccess: this.screenShareSuccess.bind(this)});
+            ucEngine.Video.startScreenShare({type:'screenshare', mode: 'viewer', onSuccess: this.screenShareSuccess.bind(this), onFail: this.screenShareFail.bind(this)});
         }
     },
 
     willDestroyElement() {
-        this._super(...arguments);
-        ucEngine.Video.stopScreenShare();
+        if(this.get('confinfo.screen_share')===GLOBAL.getMyID()){
+            ucEngine.Video.stopScreenShare();
+        }
         if($(".sCon").hasClass("Sharescreen")){
             $(".sCon").removeClass("Sharescreen");
         }
+
+        if(this.get('isfullscreen')){
+            this.get('closeFullScreen')();
+        }
+        this._super(...arguments);
     },
 
     actions: {
         stopscreenshare(){
+            // if(this.get('confinfo.screen_share')===GLOBAL.getMyID()){
+            //     ucEngine.Video.stopScreenShare();
+            // }
             this.get('startscreenshare')();
         },
 

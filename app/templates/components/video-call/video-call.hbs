@@ -24,5 +24,5 @@
     <audio id="audioplayer" autoplay></audio>
     {{video-call/bottom-menu id="conNav" host=host confinfo=confinfo myinfo=myinfo recon=recon  recordings=recordings chatdata=chatdata showrsidemenu=(action "showrsidemenu") openInvite=(action "openInvite") videoOnOff=(action "videoOnOff") micOnOff=(action "micOnOff") recOnOff=(action "recOnOff") startscreenshare=(action "startscreenshare") setting=(action "setting") leaveRoom=(action "leaveRoom")}}
 {{else}}
-    {{video-call/denied-page}}
+    {{video-call/denied-page devicesetting=devicesetting}}
 {{/if}}

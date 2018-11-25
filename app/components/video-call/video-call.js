@@ -107,6 +107,11 @@ export default Component.extend({
     }),
 
     // user function
+    prepareConference(){
+        let resultGetPeerIm = this.startConference.bind(this);
+        ucEngine.Conf.getPeerIm( this, {onComplete: resultGetPeerIm});
+    },
+
     startConference(recvdata){
         var data = recvdata.body;
         var myID = GLOBAL.getMyID();
@@ -123,7 +128,7 @@ export default Component.extend({
             if(selectdevice!==undefined&&selectdevice!==null&&selectdevice!==""){
                 selectdevice = GLOBAL.transStrToObj(selectdevice);
             }
-            ucEngine.Video.startConference({type: 'main', devicetype: config.APP.devicetype, devicestatus: this.get('myinfo.devicestatus'), videodeviceid: selectdevice.video, audiodeviceid: selectdevice.audio, facingMode: "user", onSuccess: this.onSuccessStartConference.bind(this), onFail: this.onFailStartConference.bind(this)});
+            ucEngine.Video.startConference({type: 'main', devicetype: config.APP.devicetype, devicestatus: this.get('myinfo.devicestatus'), videodeviceid: selectdevice.video, audiodeviceid: selectdevice.audio, onSuccess: this.onSuccessStartConference.bind(this), onFail: this.onFailStartConference.bind(this)});
         }
         else{
             //alert('the conference-server is not online peer : ' + ucEngine.Conf.conferenceid);
@@ -157,7 +162,21 @@ export default Component.extend({
                     ucEngine.Chats.getChatRoomInfo(1, GLOBAL_MODULE.getConfID(), {onComplete: function(){
                         ucEngine.Chats.getChatMsgData(1, GLOBAL_MODULE.getConfID());
                     }.bind(this)});
-                }.bind(this)});
+                }.bind(this), onError: function(e){
+                    switch(e.code){
+                        case 404:{
+                            window.location.replace(config.APP.domain + "/room_no_exist");
+                        }
+                        break;
+                        case 410:{
+                            window.location.replace(config.APP.domain + "/410page.html");
+                        }
+                        break;
+                        default:{
+                            window.location.replace(config.APP.domain + "/410page.html");
+                        }
+                    }
+                }});
             }
             else{
                 $('video[id=\"' + GLOBAL.getMyID() + '\"]').srcObject = ucEngine.Video.mainstream;
@@ -169,42 +188,74 @@ export default Component.extend({
     },
 
     onFailStartConference(error){
-        // can't start video conference
-        GLOBAL.error("Start Conference Fail  name =  " + error.name + " message = " + error.message);
-        if(error.name==='AbortError'){
-
-        }
-        else if(error.name==='NotAllowedError'){
-
-        }
-        else if(error.name==='NotFoundError'){
-
-        }
-        else if(error.name==='NotReadableError'){
-
+        if(error.code){
+            // signal error
+            switch(error.code){
+                case 404:{
+                    window.location.replace(config.APP.domain + "/room_no_exist");
+                }
+                break;
+                case 410:{
+                    window.location.replace(config.APP.domain + "/410page.html");
+                }
+                break;
+                default:{
+                    window.location.replace(config.APP.domain + "/410page.html");
+                }
+            }
         }
         else{
+            // can't start video conference
+            GLOBAL.error("Start Conference Fail  name =  " + error.name + " message = " + error.message);
+            if(error.name==='AbortError' || error.name==='NotReadableError'){
+                // other application use carema or mic device or any other eason
+                this.set('devicesetting', false);
+                this.set('checksuccess', false);
+            }
+            else if(error.name==='NotAllowedError'){
+                // permission error
+                this.set('devicesetting', true);
+                this.set('checksuccess', false);
+            }
+            else if(error.name==='NotFoundError'){
+                // device ok but don't get media track
+            }
+            else if(error.name==='iceconnecterror'){
+                if(error.type==='main'){
+                    // 이경우는 Main Session을 다시 맺어야 함.
+                    ucEngine.Video.stopConference();
+                    this.prepareConference();
+                }
+                else if(error.type==='viewer'){
 
-        }
+                }
+                else if(error.type==='self'){
 
-        if (error.name=="NotFoundError" || error.name == "DevicesNotFoundError" ){
-            this.set('checksuccess', false);
+                }
+            }
+            else{
+                this.set('devicesetting', true);
+                this.set('checksuccess', false);
+            }
         }
-        else if (error.name=="NotReadableError" || error.name == "TrackStartError" ){
-            this.set('checksuccess', false);
-        }
-        else if (error.name=="OverconstrainedError" || error.name == "ConstraintNotSatisfiedError" ){
-            this.set('checksuccess', false);
-        }
-        else if (error.name=="NotAllowedError" || error.name == "PermissionDeniedError" ){
-            this.set('checksuccess', false);
-        }
-        else if (error.name=="TypeError" || error.name == "TypeError" ){
-            this.set('checksuccess', false);
-        }
-        else {
-            this.set('checksuccess', false);
-        }
+        // if (error.name=="NotFoundError" || error.name == "DevicesNotFoundError" ){
+        //     this.set('checksuccess', false);
+        // }
+        // else if (error.name=="NotReadableError" || error.name == "TrackStartError" ){
+        //     this.set('checksuccess', false);
+        // }
+        // else if (error.name=="OverconstrainedError" || error.name == "ConstraintNotSatisfiedError" ){
+        //     this.set('checksuccess', false);
+        // }
+        // else if (error.name=="NotAllowedError" || error.name == "PermissionDeniedError" ){
+        //     this.set('checksuccess', false);
+        // }
+        // else if (error.name=="TypeError" || error.name == "TypeError" ){
+        //     this.set('checksuccess', false);
+        // }
+        // else {
+        //     this.set('checksuccess', false);
+        // }
     },
 
     changeMediaStatus(type, mute, viewer){
@@ -256,7 +307,21 @@ export default Component.extend({
             }
         }
         this.get('store').push({data: {id: !viewer?GLOBAL.getMyID():viewer, type:'member', attributes: {mstate: body.mstate, operation: GLOBAL.getMyID()}} });
-        ucEngine.Conf.updateConferenceUser(GLOBAL_MODULE.getConfID(), body);
+        ucEngine.Conf.updateConferenceUser(GLOBAL_MODULE.getConfID(), body, {onError: function(e){
+            switch(e.code){
+                case 404:{
+                    window.location.replace(config.APP.domain + "/room_no_exist");
+                }
+                break;
+                case 410:{
+                    window.location.replace(config.APP.domain + "/410page.html");
+                }
+                break;
+                default:{
+                    window.location.replace(config.APP.domain + "/410page.html");
+                }
+            }
+        }});
     },
 
     checkScreenShareExtension(){
@@ -310,8 +375,9 @@ export default Component.extend({
         this._super(...arguments);
         GLOBAL.NotiHandle = this;
         // get conference server peer im value
-        let resultGetPeerIm = this.startConference.bind(this);
-        ucEngine.Conf.getPeerIm( this, {onComplete: resultGetPeerIm});
+        this.prepareConference();
+        // let resultGetPeerIm = this.startConference.bind(this);
+        // ucEngine.Conf.getPeerIm( this, {onComplete: resultGetPeerIm});
 
         $(window).on('keyup', function(event){
             // alt+N
@@ -540,14 +606,28 @@ export default Component.extend({
                     ucEngine.Chats.getChatRoomInfo(1, GLOBAL_MODULE.getConfID(), {onComplete: function(){
                         ucEngine.Chats.getChatMsgData(1, GLOBAL_MODULE.getConfID());
                     }.bind(this)});
-                }.bind(this)});
+                }.bind(this), onError: function(e){
+                    switch(e.code){
+                        case 404:{
+                            window.location.replace(config.APP.domain + "/room_no_exist");
+                        }
+                        break;
+                        case 410:{
+                            window.location.replace(config.APP.domain + "/410page.html");
+                        }
+                        break;
+                        default:{
+                            window.location.replace(config.APP.domain + "/410page.html");
+                        }
+                    }
+                }});
             }
         },
 
         changedevice(){
             // reconnect main session
             let selectdevice = GLOBAL.transStrToObj(sessionStorage.getItem('selectdevice'));
-            ucEngine.Video.startConference({type: 'main', mode: 'changedevice',  devicetype: config.APP.devicetype, devicestatus: this.get('myinfo.devicestatus'), videodeviceid: selectdevice.video, audiodeviceid: selectdevice.audio, facingMode: "user", changeDevice: function(){
+            ucEngine.Video.startConference({type: 'main', mode: 'changedevice',  devicetype: config.APP.devicetype, devicestatus: this.get('myinfo.devicestatus'), videodeviceid: selectdevice.video, audiodeviceid: selectdevice.audio, changeDevice: function(){
                 if($('video[id=\"' + GLOBAL.getMyID()+ '\"]')[0]){
                     $('video[id=\"' + GLOBAL.getMyID()+ '\"]')[0].srcObject = ucEngine.Video.mainstream;
                 }
@@ -656,7 +736,7 @@ export default Component.extend({
                             if(selectdevice!==undefined&&selectdevice!==null&&selectdevice!==""){
                                 selectdevice = GLOBAL.transStrToObj(selectdevice);
                             }
-                            ucEngine.Video.startConference({type: 'main', devicetype: config.APP.devicetype, devicestatus: 'audioonly', videodeviceid: null, audiodeviceid: selectdevice.audio, facingMode: "user", onSuccess: this.onSuccessStartConference.bind(this), onFail: this.onFailStartConference.bind(this)});
+                            ucEngine.Video.startConference({type: 'main', devicetype: config.APP.devicetype, devicestatus: 'audioonly', videodeviceid: null, audiodeviceid: selectdevice.audio, onSuccess: this.onSuccessStartConference.bind(this), onFail: this.onFailStartConference.bind(this)});
                         }.bind(this)});
                     }
                 }

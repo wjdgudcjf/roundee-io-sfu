@@ -23,7 +23,7 @@ export default Component.extend({
                 }
             }
             else{
-                this.set('errorcheck', false);
+                this.set('errorcheck', true);
             }
         }.bind(this));
 

@@ -262,7 +262,21 @@ export default Component.extend({
                     sessionStorage.setItem('selectdevice', GLOBAL.transObjToStr(selecteddevice));
                     this.get('handle').send('changedevice');
                 }
-            }.bind(this)});
+            }.bind(this), onError: function(e){
+                switch(e.code){
+                    case 404:{
+                        window.location.replace(config.APP.domain + "/room_no_exist");
+                    }
+                    break;
+                    case 410:{
+                        window.location.replace(config.APP.domain + "/410page.html");
+                    }
+                    break;
+                    default:{
+                        window.location.replace(config.APP.domain + "/410page.html");
+                    }
+                }
+            }});
         },
 
 

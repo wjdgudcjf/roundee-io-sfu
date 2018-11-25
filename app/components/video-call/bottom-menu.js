@@ -305,7 +305,21 @@ export default Component.extend({
                     let result_note_view_mode = 'nv'+ GLOBAL.genConferenceMode();
                     let result_note_noview_mode = 'nn'+ GLOBAL.genConferenceMode();
                     GLOBAL.info('set the result_admin_mode');
-                    ucEngine.Conf.updateConferenceReserve(GLOBAL_MODULE.getConfID(), {result_admin_mode: result_admin_mode, result_note_view_mode: result_note_view_mode, result_note_noview_mode: result_note_noview_mode}, null);
+                    ucEngine.Conf.updateConferenceReserve(GLOBAL_MODULE.getConfID(), {result_admin_mode: result_admin_mode, result_note_view_mode: result_note_view_mode, result_note_noview_mode: result_note_noview_mode}, {onError: function(e){
+                        switch(e.code){
+                            case 404:{
+                                window.location.replace(config.APP.domain + "/room_no_exist");
+                            }
+                            break;
+                            case 410:{
+                                window.location.replace(config.APP.domain + "/410page.html");
+                            }
+                            break;
+                            default:{
+                                window.location.replace(config.APP.domain + "/410page.html");
+                            }
+                        }
+                    }});
                 }
 
                 this.get('recOnOff')();

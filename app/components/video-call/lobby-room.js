@@ -172,11 +172,41 @@ export default Component.extend({
     },
 
     onFailGetViewer(error){
-        GLOBAL.error("Get Self Viewer Fail = " + error.message);
+        if(error.code){
+            // signal error
+            switch(error.code){
+                case 404:{
+                    window.location.replace(config.APP.domain + "/room_no_exist");
+                }
+                break;
+                case 410:{
+                    window.location.replace(config.APP.domain + "/410page.html");
+                }
+                break;
+                default:{
+                    window.location.replace(config.APP.domain + "/410page.html");
+                }
+            }
+        }
+        else{
+            GLOBAL.error("Get Self Viewer Fail = " + error.message);
+        }
     },
 
     getDeviceFail(error){
-        GLOBAL.error(error.message);
+        GLOBAL.error("Get Device Info Fail in lobby name =  " + error.name + " message = " + error.message);
+        // if(error.name==='AbortError' || error.name==='NotReadableError'){
+        //     // other application use carema or mic device or any other eason
+        // }
+        // else if(error.name==='NotAllowedError'){
+        //     // permission error
+        // }
+        // else if(error.name==='NotFoundError'){
+        //     // device ok but don't get media track
+        // }
+        // else{
+        //
+        // }
     },
 
     init() {
@@ -190,6 +220,8 @@ export default Component.extend({
         this._super(...arguments);
         this.set('displayname', this.get('myinfo.displayname'));
         ucEngine.Video.checkDevice({getDevice: this.getDeviceList.bind(this), getDeviceFail: this.getDeviceFail.bind(this)});
+
+        $("#loader").addClass('hide');
     },
 
     click(event){

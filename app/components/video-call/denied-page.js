@@ -5,11 +5,13 @@ import config from '../../config/environment';
 
 export default Component.extend({
     store: service('store'),
+    session: service('roundee-auth'),
     tagName: 'div',
     ischrome: false,
     isfirefox: false,
     isopera: false,
     issafari: false,
+    devicesetting: true,
 
     browserchecking: computed(function(){
         if(config.APP.browsertype==='chrome') {
@@ -25,6 +27,11 @@ export default Component.extend({
           this.set('issafari', true);
         }
     }),
+
+    didInsertElement() {
+        this._super(...arguments);
+        sessionStorage.clear();
+    },
 
     actions: {
       refreshBrowser(){
